@@ -1,5 +1,15 @@
 data "proxmox_virtual_environment_nodes" "available" {}
 
+resource "proxmox_virtual_environment_download_file" "debian12" {
+  node_name    = var.proxmox_node
+  content_type = "iso"
+  datastore_id = "local"
+  url          = "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+  file_name    = "debian-12-generic-amd64.img"
+  overwrite    = false
+}
+
+
 output "proxmox_nodes" {
   value = data.proxmox_virtual_environment_nodes.available.names
 }
@@ -36,14 +46,13 @@ module "test_vm" {
   memory       = 2048
   disk_size    = 20
   datastore_id = "local-lvm"
-  image_id     = "local:iso/debian-12-generic-amd64.qcow2"
+  image_id     = proxmox_virtual_environment_download_file.debian12.id  # referencia al recurso
   ip_address   = "172.16.120.202/24"
   gateway      = "172.16.120.1"
   vlan_tag     = null
   bridge       = "vmbr120"
-  tags         = ["terraform", "test", "vm"]
+  tags         = ["terraform", "vm", "test"]
 }
-
 output "test_vm_ip" {
   value = module.test_vm.ip_address
 }
