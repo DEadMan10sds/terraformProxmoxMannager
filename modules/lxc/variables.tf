@@ -61,7 +61,7 @@ variable "vlan_tag" {
 variable "bridge" {
   description = "Bridge de red en Proxmox"
   type        = string
-  default     = "vmbr0"
+  default     = "vmbr120"
 }
 
 variable "unprivileged" {
