@@ -1,16 +1,5 @@
 data "proxmox_virtual_environment_nodes" "available" {}
 
-
-resource "proxmox_virtual_environment_download_file" "debian12" {
-  node_name    = var.proxmox_node
-  content_type = "iso"
-  datastore_id = "local"
-  url          = "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
-  file_name    = "debian-12-generic-amd64.img"
-  overwrite    = false
-}
-
-
 output "proxmox_nodes" {
   value = data.proxmox_virtual_environment_nodes.available.names
 }
@@ -18,7 +7,7 @@ output "proxmox_nodes" {
 module "reverse_proxy" {
   source = "../../modules/lxc"
 
-  node_name        = var.proxmox_node        # server1
+  node_name        = var.proxmox_node
   vm_id            = 100
   hostname         = "reverse-proxy"
   cores            = 2
