@@ -40,7 +40,7 @@ module "piggybank" {
   ip_address       = "172.16.120.11/24"
   gateway          = "172.16.120.1"
   vlan_tag         = null
-  image_id         = "vm-102-disk-1"
+  image_id         = null
   bridge           = "vmbr120"
   tags             = ["terraform", "vm", "app"]
   ssh_public_keys  = file("~/.ssh/id_ed25519.pub")

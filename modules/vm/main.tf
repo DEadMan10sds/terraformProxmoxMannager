@@ -23,11 +23,16 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   disk {
     datastore_id = var.datastore_id
-    file_id      = var.image_id
     interface    = "virtio0"
     size         = var.disk_size
     discard      = "on"
     iothread     = true
+    dynamic "file_id_block" {
+      for_each = var.image_id != null ? [1] : []
+        content {
+          file_id = var.image_id
+        }
+    }
   }
 
   network_device {
