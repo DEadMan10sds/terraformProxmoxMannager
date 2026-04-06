@@ -48,3 +48,38 @@
     name: nginx
     state: started
     enabled: yes
+
+- name: Habilitar vhosts
+  file:
+    src: "/etc/nginx/sites-available/{{ item.name }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ item.name }}.conf"
+    state: link
+  loop: "{{ vhosts }}"
+  notify: reload nginx
+
+- name: Eliminar default
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: reload nginx
+
+
+- name: Instalar certbot
+  apt:
+    name:
+      - certbot
+      - python3-certbot-nginx
+    state: present
+    update_cache: yes
+
+    - name: Obtener certificado SSL
+  command: >
+    certbot --nginx
+    -d {{ item.domain }}
+    --non-interactive
+    --agree-tos
+    -m admin@{{ item.domain }}
+    --redirect
+  args:
+    creates: "/etc/letsencrypt/live/{{ item.domain }}/fullchain.pem"
+  loop: "{{ vhosts }}"
