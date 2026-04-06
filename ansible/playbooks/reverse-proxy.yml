@@ -1,0 +1,10 @@
+---
+- name: Configurar reverse proxy Nginx
+  hosts: reverse_proxy
+  become: true
+
+  vars_files:
+    - ../vars/secrets.yml
+
+  roles:
+    - nginx
