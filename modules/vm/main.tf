@@ -23,7 +23,7 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   disk {
     datastore_id = var.datastore_id
-    interface    = "virtio0"
+    interface    = "virtio"
     size         = var.disk_size
     discard      = "on"
     iothread     = true
