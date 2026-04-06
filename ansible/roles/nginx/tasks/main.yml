@@ -63,7 +63,6 @@
     state: absent
   notify: reload nginx
 
-
 - name: Instalar certbot
   apt:
     name:
@@ -72,7 +71,7 @@
     state: present
     update_cache: yes
 
-    - name: Obtener certificado SSL
+- name: Obtener certificado SSL
   command: >
     certbot --nginx
     -d {{ item.domain }}
