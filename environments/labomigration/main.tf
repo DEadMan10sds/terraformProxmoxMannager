@@ -3,7 +3,7 @@ data "proxmox_virtual_environment_nodes" "available" {}
 output "proxmox_nodes" {
   value = data.proxmox_virtual_environment_nodes.available.names
 }
-/*
+
 module "reverse_proxy" {
   source = "../../modules/lxc"
 
@@ -26,4 +26,3 @@ module "reverse_proxy" {
 output "reverse_proxy_ip" {
   value = module.reverse_proxy.ip_address
 }
-*/
