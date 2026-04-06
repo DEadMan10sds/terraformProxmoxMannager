@@ -34,7 +34,7 @@ If a container doesn't allows ssh, we must edit the sshd_config file
 
 1. Access to lxc via proxmox:
    `pct enter <id>`
-2. Access file: `nano /etc/sshd_config`
+2. Access file: `nano /etc/ssh/sshd_config`
 3. Edit the lines: <br>
    `PermitRootLogin yes` <br>
    `PasswordAuthentication yes`
