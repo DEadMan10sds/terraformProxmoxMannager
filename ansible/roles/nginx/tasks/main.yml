@@ -36,7 +36,6 @@
     src: vhost.conf.j2
     dest: "/etc/nginx/sites-available/{{ item.name }}.conf"
     mode: "0644"
-    validate: "nginx -t"
   loop: "{{ vhosts }}"
   notify: reload nginx
 
