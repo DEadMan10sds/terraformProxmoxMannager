@@ -33,6 +33,7 @@ variable "datastore_id" {
 variable "image_id" {
   description = "ID de la imagen cloud-init en Proxmox, ej: local:iso/debian-12-generic-amd64.img"
   type        = string
+  default     = null
 }
 
 variable "ip_address" {

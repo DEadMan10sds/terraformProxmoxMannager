@@ -27,3 +27,24 @@ module "reverse_proxy" {
 output "reverse_proxy_ip" {
   value = module.reverse_proxy.ip_address
 }
+
+module "piggybank" {
+  source = "../../modules/vm"
+  node_name        = "server1"
+  vm_id            = 102
+  hostname         = "PiggyBank"
+  cores            = 2
+  memory           = 4096
+  disk_size        = 80
+  datastore_id     = "local-lvm"
+  ip_address       = "172.16.120.11/24"
+  gateway          = "172.16.120.1"
+  vlan_tag         = null
+  bridge           = "vmbr0"
+  tags             = ["terraform", "vm", "piggybank"]
+  ssh_public_keys  = file("~/.ssh/id_ed25519.pub")
+}
+
+output "piggybank_ip" {
+  value = module.piggybank.ip_address
+}
