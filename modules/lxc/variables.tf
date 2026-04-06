@@ -8,6 +8,13 @@ variable "vm_id" {
   type        = number
 }
 
+variable "root_password" {
+  description = "Contraseña de root del LXC"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 variable "hostname" {
   description = "Hostname del contenedor"
   type        = string

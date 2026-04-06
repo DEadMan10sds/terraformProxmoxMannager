@@ -1,3 +1,5 @@
 proxmox_endpoint  = "https://172.16.111.11:8006"
 proxmox_api_token = "user@pam!id=token"
 proxmox_node      = "server1"
+lxc_root_password = "una-contraseña-segura"
+//ssh_public_keys = "ssh-ed25519 AAAA... tu@pc"

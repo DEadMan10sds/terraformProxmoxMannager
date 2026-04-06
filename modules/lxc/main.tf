@@ -23,6 +23,7 @@ resource "proxmox_virtual_environment_container" "this" {
 
     user_account {
       keys = var.ssh_public_keys != "" ? [var.ssh_public_keys] : []
+      password = var.root_password
     }
   }
 

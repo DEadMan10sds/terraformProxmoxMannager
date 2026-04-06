@@ -14,3 +14,9 @@ variable "proxmox_node" {
   type        = string
   default     = "server1"
 }
+
+variable "lxc_root_password" {
+  description = "Contraseña de root para LXCs"
+  type        = string
+  sensitive   = true
+}
