@@ -1,3 +1,4 @@
+```yaml
 ---
 - name: Actualizar apt cache
   apt:
@@ -12,12 +13,7 @@
       - python3-certbot-nginx
     state: present
 
-- name: Eliminar sitio default de Nginx
-  file:
-    path: /etc/nginx/sites-enabled/default
-    state: absent
-  notify: reload nginx
-
+# 🔹 Crear logs por sitio
 - name: Crear directorio de logs por sitio
   file:
     path: "/var/log/nginx/{{ item.name }}"
@@ -27,14 +23,25 @@
     mode: "0755"
   loop: "{{ vhosts }}"
 
+# 🔹 Backup de configs actuales (rollback)
+- name: Backup de configuración actual de nginx
+  copy:
+    src: "/etc/nginx/sites-available/"
+    dest: "/etc/nginx/backup_sites_available/"
+    remote_src: yes
+  ignore_errors: yes
+
+# 🔹 Deploy configs nuevas (con validación)
 - name: Desplegar configuración de virtual hosts
   template:
     src: vhost.conf.j2
     dest: "/etc/nginx/sites-available/{{ item.name }}.conf"
     mode: "0644"
+    validate: "nginx -t -c %s"
   loop: "{{ vhosts }}"
   notify: reload nginx
 
+# 🔹 Habilitar vhosts
 - name: Habilitar virtual hosts
   file:
     src: "/etc/nginx/sites-available/{{ item.name }}.conf"
@@ -43,34 +50,25 @@
   loop: "{{ vhosts }}"
   notify: reload nginx
 
+# 🔹 Eliminar default
+- name: Eliminar default de nginx
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: reload nginx
+
+# 🔹 Asegurar servicio activo
 - name: Asegurar que Nginx está corriendo y habilitado
   service:
     name: nginx
     state: started
     enabled: yes
 
-- name: Habilitar vhosts
-  file:
-    src: "/etc/nginx/sites-available/{{ item.name }}.conf"
-    dest: "/etc/nginx/sites-enabled/{{ item.name }}.conf"
-    state: link
-  loop: "{{ vhosts }}"
-  notify: reload nginx
+# 🔹 Validar nginx antes de certbot
+- name: Validar configuración nginx
+  command: nginx -t
 
-- name: Eliminar default
-  file:
-    path: /etc/nginx/sites-enabled/default
-    state: absent
-  notify: reload nginx
-
-- name: Instalar certbot
-  apt:
-    name:
-      - certbot
-      - python3-certbot-nginx
-    state: present
-    update_cache: yes
-
+# 🔹 Obtener certificados SSL (solo si no existen)
 - name: Obtener certificado SSL
   command: >
     certbot --nginx
@@ -82,3 +80,29 @@
   args:
     creates: "/etc/letsencrypt/live/{{ item.domain }}/fullchain.pem"
   loop: "{{ vhosts }}"
+
+# 🔥 ROLLBACK automático si algo falla
+- block:
+
+    - name: Reload nginx
+      service:
+        name: nginx
+        state: reloaded
+
+  rescue:
+
+    - name: Restaurar configuración anterior
+      copy:
+        src: "/etc/nginx/backup_sites_available/"
+        dest: "/etc/nginx/sites-available/"
+        remote_src: yes
+
+    - name: Reiniciar nginx con config anterior
+      service:
+        name: nginx
+        state: restarted
+
+    - name: Fallar ejecución
+      fail:
+        msg: "❌ Error en configuración de nginx. Se hizo rollback automático."
+```
