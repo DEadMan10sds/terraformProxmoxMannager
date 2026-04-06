@@ -1,4 +1,3 @@
-```yaml
 ---
 - name: Actualizar apt cache
   apt:
@@ -83,14 +82,12 @@
 
 # 🔥 ROLLBACK automático si algo falla
 - block:
-
     - name: Reload nginx
       service:
         name: nginx
         state: reloaded
 
   rescue:
-
     - name: Restaurar configuración anterior
       copy:
         src: "/etc/nginx/backup_sites_available/"
@@ -105,4 +102,3 @@
     - name: Fallar ejecución
       fail:
         msg: "❌ Error en configuración de nginx. Se hizo rollback automático."
-```
