@@ -27,12 +27,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     size         = var.disk_size
     discard      = "on"
     iothread     = true
-    dynamic "file_id_block" {
-      for_each = var.image_id != null ? [1] : []
-        content {
-          file_id = var.image_id
-        }
-    }
+    file_id = var.image_id != null ? var.image_id : null
   }
 
   network_device {
