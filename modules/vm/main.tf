@@ -6,7 +6,7 @@ resource "proxmox_virtual_environment_vm" "this" {
   started   = true
 
   description = "Managed by Terraform"
-  boot_order = ["scsi0"]
+  boot_order = var.boot_order
   
   agent {
     enabled = true  # requiere qemu-guest-agent instalado en la VM
@@ -14,6 +14,7 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   cpu {
     cores = var.cores
+    sockets = var.sockets
     type  = "x86-64-v2-AES"
   }
 

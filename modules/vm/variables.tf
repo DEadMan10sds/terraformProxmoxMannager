@@ -15,6 +15,18 @@ variable "cores" {
   default = 2
 }
 
+variable "boot_order" {
+  description = "Lista de dispositivos de arranque"
+  type = list(string)
+  default = [ "scsi0" ]
+}
+
+variable "sockets" { 
+  description = "Número de sockets de CPU para VM"
+  type = number
+  default = 1
+}
+
 variable "memory" {
   type    = number
   default = 2048
