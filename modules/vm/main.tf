@@ -26,11 +26,10 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   disk {
     datastore_id = var.datastore_id
-    interface    = "virtio"
+    interface    = "scsi0"
     size         = var.disk_size
     discard      = "on"
     iothread     = true
-    # Solo definir file_id si es una VM nueva
     file_id      = var.image_id != "" ? var.image_id : null
   }
 
