@@ -117,7 +117,7 @@ locals {
   qemu_hosts = [
     for vm in local.vms : {
       name = vm.hostname
-      ip   = vm.ip_address
+      ip   = split("/", vm.ip_address)[0]
       user = vm.ssh_user
     }
   ]
@@ -125,7 +125,7 @@ locals {
   lxc_hosts = [
     for lxc in local.lxc : {
       name = lxc.hostname
-      ip   = lxc.ip_address
+      ip   = split("/", vm.ip_address)[0]
       user = "root"
     }
   ]
@@ -140,7 +140,7 @@ locals {
 
   # Solo IPs → detectar hosts nuevos
   qemu_ips_hash = sha1(jsonencode([
-    for vm in local.qemu_hosts : vm.ip
+    for vm in local.qemu_hosts : split("/", vm.ip_address)[0]
   ]))
 }
 
