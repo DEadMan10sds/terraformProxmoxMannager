@@ -22,6 +22,7 @@ variable "lxc_root_password" {
 }
 
 variable "vhosts" {
+  description = "Lista de virtual hosts para nginx"
   type = list(object({
     name    = string
     domain  = string
