@@ -9,3 +9,7 @@ output "hostname" {
 output "ip_address" {
   value = var.ip_address
 }
+
+output "ssh_user" {
+  value = var.ssh_user
+}

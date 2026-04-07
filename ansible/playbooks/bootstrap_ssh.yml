@@ -2,6 +2,7 @@
   hosts: localhost
   gather_facts: false
   vars_files:
+    - ../vars/generated.yml
     - ../vars/secrets.yml
 
   tasks:
@@ -11,8 +12,8 @@
         groups: bootstrap
         ansible_host: "{{ item.ip }}"
         ansible_user: "{{ item.user }}"
-        ansible_password: "{{ item.password }}"
-      loop: "{{ qemuhosts }}"
+        ansible_password: "{{ passwords[item.name] }}"
+      loop: "{{ qemu_hosts }}"
 
 - name: Instalar SSH key en VMs
   hosts: bootstrap

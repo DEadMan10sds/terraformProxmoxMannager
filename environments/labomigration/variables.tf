@@ -20,3 +20,11 @@ variable "lxc_root_password" {
   type        = string
   sensitive   = true
 }
+
+variable "vhosts" {
+  type = list(object({
+    name    = string
+    domain  = string
+    backend = string
+  }))
+}
