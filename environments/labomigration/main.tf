@@ -151,7 +151,7 @@ locals {
 resource "local_file" "ansible_vars" {
   filename = "/home/tfuser/terraformProxmoxMannager/ansible/vars/generated.yml"
 
-  content = yamlencode({
+  content  = templatefile("${path.module}/generated.yml.tpl", {
     vhosts     = var.vhosts
     qemu_hosts = local.qemu_hosts
     lxc_hosts  = local.lxc_hosts
@@ -211,7 +211,7 @@ resource "null_resource" "lxc_pipeline" {
 # 🔹 Nginx / Reverse Proxy
 resource "null_resource" "nginx_pipeline" {
   provisioner "local-exec" {
-    command = "ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/reverse-proxy.yml"
+    command = "ANSIBLE_CONFIG=/home/tfuser/terraformProxmoxMannager/ansible/ansible.cfg ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/reverse-proxy.yml"
   }
 
   triggers = {
