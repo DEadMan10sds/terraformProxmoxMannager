@@ -36,13 +36,13 @@ variable "disk_size" {
   type    = number
   default = 20
 }
-
+/*
 variable "disk_interface" {
   type = string
   description = "Disk interface"
   default = "scsi"
 }
-
+*/
 variable "datastore_id" {
   type    = string
   default = "VMStorage"
