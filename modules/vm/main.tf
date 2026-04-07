@@ -11,7 +11,7 @@ resource "proxmox_virtual_environment_vm" "this" {
   boot_order = length(var.boot_order) > 0 ? var.boot_order : null
 
   agent {
-    enabled = var.enable_qemu_agent  # true solo si QEMU guest agent está instalado
+    enabled = true
   }
 
   cpu {
