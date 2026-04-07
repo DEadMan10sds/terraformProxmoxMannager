@@ -32,7 +32,7 @@
   hosts: qemu
   become: true
   roles:
-    - qemu_agent
+    - ../qemu_agent
 
 # ---- LXC ----
 - name: Configuración base en LXC
