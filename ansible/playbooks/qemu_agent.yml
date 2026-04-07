@@ -2,8 +2,8 @@
   hosts: localhost
   gather_facts: no
   vars_files:
-    - ../../vars/generated.yml
-    - ../../vars/secrets.yml
+    - ../vars/generated.yml
+    - ../vars/secrets.yml
 
   tasks:
     - name: Agregar VMs al grupo qemu

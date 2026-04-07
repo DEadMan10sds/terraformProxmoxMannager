@@ -4,8 +4,8 @@
   become: true
 
   vars_files:
-    - ../../vars/generated.yml
-    - ../../vars/secrets.yml
+    - ../vars/generated.yml
+    - ../vars/secrets.yml
 
   roles:
     - nginx
