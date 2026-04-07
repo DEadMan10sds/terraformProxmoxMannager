@@ -6,7 +6,6 @@ output "proxmox_nodes" {
 
 module "reverse_proxy" {
   source = "../../modules/lxc"
-
   node_name        = var.proxmox_node
   vm_id            = 100
   hostname         = "reverse-proxy"
@@ -22,7 +21,6 @@ module "reverse_proxy" {
   root_password    = var.lxc_root_password
   tags             = ["terraform", "nginx", "reverse-proxy"]
   ssh_public_keys  = file("~/.ssh/id_ed25519.pub")
-  ssh_user         = "root"
 }
 
 output "reverse_proxy_ip" {

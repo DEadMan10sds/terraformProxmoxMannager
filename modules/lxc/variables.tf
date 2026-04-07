@@ -89,12 +89,6 @@ variable "ssh_public_keys" {
   default     = ""
 }
 
-variable "ssh_user" {
-  type = string
-  description = "User for ssh connection"
-}
-
-
 variable "tags" {
   description = "Tags del contenedor"
   type        = list(string)
