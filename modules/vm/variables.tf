@@ -18,7 +18,7 @@ variable "cores" {
 variable "boot_order" {
   description = "Lista de dispositivos de arranque"
   type = list(string)
-  default = [ "scsi0" ]
+  default = [  ]
 }
 
 variable "sockets" { 
@@ -39,7 +39,7 @@ variable "disk_size" {
 
 variable "datastore_id" {
   type    = string
-  default = "local-lvm"
+  default = "VMStorage"
 }
 
 variable "image_id" {
