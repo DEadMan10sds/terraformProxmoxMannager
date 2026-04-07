@@ -50,3 +50,26 @@ module "piggybank" {
 output "piggybank_ip" {
   value = module.piggybank.ip_address
 }
+
+module "beeprovi" {
+  source = "../../modules/vm"
+  node_name        = "server1"
+  vm_id            = 101
+  hostname         = "Beeprovi"
+  cores            = 4
+  sockets          = 2
+  memory           = 4096
+  disk_size        = 128
+  datastore_id     = "VMStorage"
+  disk_interface   = "scsi0"
+  boot_order       = [ "scsi0" ]
+  ip_address       = "172.16.120.12/24"
+  gateway          = "172.16.120.1"
+  bridge           = "vmbr120"
+  tags             = ["terraform", "vm", "app"]
+  ssh_public_keys  = file("~/.ssh/id_ed25519.pub")
+}
+
+output "beeprovi_ip" {
+  value = module.piggybank.ip_address
+}
