@@ -37,11 +37,9 @@ module "piggybank" {
   sockets          = 1
   memory           = 4096
   disk_size        = 80
-  datastore_id     = "local-lvm"
+  datastore_id     = "VMStorage"
   ip_address       = "172.16.120.11/24"
   gateway          = "172.16.120.1"
-  vlan_tag         = null
-  image_id         = null
   bridge           = "vmbr120"
   tags             = ["terraform", "vm", "app"]
   ssh_public_keys  = file("~/.ssh/id_ed25519.pub")
