@@ -181,7 +181,7 @@ resource "null_resource" "bootstrap" {
 # 🔹 Configuración VM (qemu agent, etc)
 resource "null_resource" "vm_pipeline" {
   provisioner "local-exec" {
-    command = "ansible-playbook ~/terraformProxmoxMannager/ansible/playbooks/qemu_agent.yml"
+    command = "ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/qemu_agent.yml"
   }
 
   triggers = {
@@ -196,7 +196,7 @@ resource "null_resource" "vm_pipeline" {
 # 🔹 Configuración LXC base
 resource "null_resource" "lxc_pipeline" {
   provisioner "local-exec" {
-    command = "ansible-playbook ~/terraformProxmoxMannager/ansible/playbooks/qemu_agent.yml"
+    command = "ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/qemu_agent.yml"
   }
 
   triggers = {
@@ -211,7 +211,7 @@ resource "null_resource" "lxc_pipeline" {
 # 🔹 Nginx / Reverse Proxy
 resource "null_resource" "nginx_pipeline" {
   provisioner "local-exec" {
-    command = "ansible-playbook -i ~/terraformProxmoxMannager/ansible/inventory/hosts.yml ~/terraformProxmoxMannager/ansible/playbooks/reverse-proxy.yml"
+    command = "ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/reverse-proxy.yml"
   }
 
   triggers = {
