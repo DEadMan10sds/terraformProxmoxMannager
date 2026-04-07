@@ -58,6 +58,9 @@ module "piggybank" {
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
 
   tags = ["terraform", "vm", "app"]
+
+  password = var.vm_passwords["PiggyBank"]
+
 }
 
 module "beeprovi" {
@@ -82,6 +85,8 @@ module "beeprovi" {
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
 
   tags = ["terraform", "vm", "app"]
+  
+  password = var.vm_passwords["PiggyBank"]
 }
 
 ########################################

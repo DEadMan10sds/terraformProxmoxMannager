@@ -42,6 +42,13 @@ variable "ssh_user" {
   description = "User for ssh connection"
 }
 
+variable "password" {
+  description = "Password para usuario de VM"
+  type = string
+  sensitive = true
+  default = null
+}
+
 variable "disk_interface" {
   type = string
   description = "Disk interface"

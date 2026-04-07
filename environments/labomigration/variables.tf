@@ -29,3 +29,10 @@ variable "vhosts" {
     backend = string
   }))
 }
+
+variable "vm_passwords" {
+  description = "Passwords por VM"
+  type        = map(string)
+  sensitive   = true
+  default     = {}
+}
