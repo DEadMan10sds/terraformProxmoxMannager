@@ -2,8 +2,8 @@
   hosts: localhost
   gather_facts: false
   vars_files:
-    - ../vars/generated.yml
-    - ../vars/secrets.yml
+    - ../../vars/generated.yml
+    - ../../vars/secrets.yml
 
   tasks:
     - name: Agregar hosts
