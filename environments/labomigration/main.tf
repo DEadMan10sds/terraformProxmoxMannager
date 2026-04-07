@@ -21,7 +21,8 @@ module "reverse_proxy" {
   bridge           = "vmbr0"
   root_password    = var.lxc_root_password
   tags             = ["terraform", "nginx", "reverse-proxy"]
-  ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+  ssh_public_keys  = file("~/.ssh/id_ed25519.pub")
+  ssh_user         = "root"
 }
 
 output "reverse_proxy_ip" {
