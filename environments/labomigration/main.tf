@@ -39,6 +39,7 @@ module "piggybank" {
   disk_size        = 80
   datastore_id     = "VMStorage"
   disk_interface   = "scsi0"
+  boot_order       = [ "scsi0" ]
   ip_address       = "172.16.120.11/24"
   gateway          = "172.16.120.1"
   bridge           = "vmbr120"
