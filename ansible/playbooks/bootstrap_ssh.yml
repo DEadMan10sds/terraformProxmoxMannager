@@ -7,10 +7,12 @@
   tasks:
     - name: Instalar SSH key
       ansible.builtin.authorized_key:
-        user: "{{ item.user }}"
+        user: "{{ host.user }}"
         key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
       loop: "{{ qemuhosts }}"
-      delegate_to: "{{ item.ip }}"
+      loop_control:
+        loop_var: host
+      delegate_to: "{{ host.ip }}"
       vars:
-        ansible_ssh_user: "{{ item.user }}"
-        ansible_ssh_pass: "{{ item.password }}"
+        ansible_user: "{{ host.user }}"
+        ansible_password: "{{ host.password }}"
