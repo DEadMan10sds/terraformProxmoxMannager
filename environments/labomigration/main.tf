@@ -149,7 +149,7 @@ locals {
 ########################################
 
 resource "local_file" "ansible_vars" {
-  filename = "${path.root}/../../ansible/vars/generated.yml"
+  filename = "${path.root}~/terraformProxmoxMannager/ansible/vars/generated.yml"
 
   content = yamlencode({
     vhosts     = var.vhosts
@@ -165,7 +165,7 @@ resource "local_file" "ansible_vars" {
 # 🔹 Bootstrap SSH (solo nuevas VMs)
 resource "null_resource" "bootstrap" {
   provisioner "local-exec" {
-    command = "ansible-playbook ../../ansible/playbooks/bootstrap_ssh.yml"
+    command = "ansible-playbook ~/terraformProxmoxMannager/ansible/playbooks/bootstrap_ssh.yml"
   }
 
   triggers = {
@@ -181,7 +181,7 @@ resource "null_resource" "bootstrap" {
 # 🔹 Configuración VM (qemu agent, etc)
 resource "null_resource" "vm_pipeline" {
   provisioner "local-exec" {
-    command = "ansible-playbook ../../ansible/playbooks/qemu_agent.yml"
+    command = "ansible-playbook ~/terraformProxmoxMannager/ansible/playbooks/qemu_agent.yml"
   }
 
   triggers = {
@@ -196,7 +196,7 @@ resource "null_resource" "vm_pipeline" {
 # 🔹 Configuración LXC base
 resource "null_resource" "lxc_pipeline" {
   provisioner "local-exec" {
-    command = "ansible-playbook ../../ansible/playbooks/lxc_base.yml"
+    command = "ansible-playbook ~/terraformProxmoxMannager/ansible/playbooks/lxc_base.yml"
   }
 
   triggers = {
@@ -211,7 +211,7 @@ resource "null_resource" "lxc_pipeline" {
 # 🔹 Nginx / Reverse Proxy
 resource "null_resource" "nginx_pipeline" {
   provisioner "local-exec" {
-    command = "ansible-playbook ../../ansible/playbooks/nginx.yml"
+    command = "ansible-playbook ~/terraformProxmoxMannager/ansible/playbooks/nginx.yml"
   }
 
   triggers = {
