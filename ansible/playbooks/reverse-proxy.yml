@@ -5,6 +5,7 @@
 
   vars_files:
     - ../../vars/generated.yml
+    - ../../vars/secrets.yml
 
   roles:
     - nginx

@@ -3,6 +3,7 @@
   gather_facts: no
   vars_files:
     - ../../vars/generated.yml
+    - ../../vars/secrets.yml
 
   tasks:
     - name: Agregar VMs al grupo qemu
@@ -11,7 +12,7 @@
         ansible_host: "{{ item.ip }}"
         groups: qemu
         ansible_become: true
-        ansible_become_password: "{{ passwords[inventory_hostname] }}"
+        ansible_become_password: "{{ passwords[item.name] }}"
         ansible_user: "{{ item.user }}"
         ansible_ssh_private_key_file: "/home/tfuser/.ssh/id_ed25519"
       loop: "{{ qemu_hosts }}"
@@ -22,7 +23,7 @@
         ansible_host: "{{ item.ip }}"
         groups: lxc
         ansible_become: true
-        ansible_become_password: "{{ passwords[inventory_hostname] }}"
+        ansible_become_password: "{{ passwords[item.name] }}"
         ansible_user: "{{ item.user }}"
         ansible_ssh_private_key_file: "/home/tfuser/.ssh/id_ed25519"
       loop: "{{ lxc_hosts }}"
