@@ -211,7 +211,7 @@ resource "null_resource" "lxc_pipeline" {
 # 🔹 Nginx / Reverse Proxy
 resource "null_resource" "nginx_pipeline" {
   provisioner "local-exec" {
-    command = "ansible-playbook ~/terraformProxmoxMannager/ansible/playbooks/reverse-proxy.yml"
+    command = "ansible-playbook -i ~/terraformProxmoxMannager/ansible/inventory/hosts.yml ~/terraformProxmoxMannager/ansible/playbooks/reverse-proxy.yml"
   }
 
   triggers = {
