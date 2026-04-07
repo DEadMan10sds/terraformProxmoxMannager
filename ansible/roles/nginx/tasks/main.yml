@@ -86,7 +86,7 @@
         -d {{ item.domain }}
         --non-interactive
         --agree-tos
-        -m admin@{{ item.domain }}
+        -m {{ certbot_email }}
         --redirect
       args:
         creates: "/etc/letsencrypt/live/{{ item.domain }}/fullchain.pem"

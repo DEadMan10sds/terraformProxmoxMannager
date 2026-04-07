@@ -9,7 +9,7 @@ resource "proxmox_virtual_environment_vm" "this" {
   boot_order = ["virtio0"]
   
   agent {
-    enabled = true  # requiere qemu-guest-agent instalado en la VM
+    enabled = false  # requiere qemu-guest-agent instalado en la VM
   }
 
   cpu {
