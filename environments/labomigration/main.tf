@@ -196,7 +196,7 @@ resource "null_resource" "vm_pipeline" {
 # 🔹 Configuración LXC base
 resource "null_resource" "lxc_pipeline" {
   provisioner "local-exec" {
-    command = "ansible-playbook ~/terraformProxmoxMannager/ansible/playbooks/quemu_agent.yml"
+    command = "ansible-playbook ~/terraformProxmoxMannager/ansible/playbooks/qemu_agent.yml"
   }
 
   triggers = {
