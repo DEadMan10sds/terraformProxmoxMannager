@@ -10,6 +10,8 @@
         name: "{{ item.name }}"
         ansible_host: "{{ item.ip }}"
         groups: qemu
+        ansible_become: true
+        ansible_become_password: "{{ item.password }}"
         ansible_user: "{{ item.user }}"
         ansible_ssh_private_key_file: "/home/tfuser/.ssh/id_ed25519"
       loop: "{{ qemu_hosts }}"
@@ -19,6 +21,8 @@
         name: "{{ item.name }}"
         ansible_host: "{{ item.ip }}"
         groups: lxc
+        ansible_become: true
+        ansible_become_password: "{{ item.password }}"
         ansible_user: "{{ item.user }}"
         ansible_ssh_private_key_file: "/home/tfuser/.ssh/id_ed25519"
       loop: "{{ lxc_hosts }}"
@@ -26,14 +30,14 @@
 # ---- VMs ----
 - name: Configurar QEMU Agent en VMs
   hosts: qemu
-  become: yes
+  become: true
   roles:
     - qemu_agent
 
 # ---- LXC ----
 - name: Configuración base en LXC
   hosts: lxc
-  become: yes
+  become: true
 
   tasks:
     - name: Instalar paquetes base
