@@ -6,16 +6,18 @@ resource "proxmox_virtual_environment_vm" "this" {
   started   = true
 
   description = "Managed by Terraform"
-  boot_order = var.boot_order
-  
+
+  # Boot order opcional
+  boot_order = length(var.boot_order) > 0 ? var.boot_order : null
+
   agent {
-    enabled = true  # requiere qemu-guest-agent instalado en la VM
+    enabled = var.enable_qemu_agent  # true solo si QEMU guest agent está instalado
   }
 
   cpu {
-    cores = var.cores
+    cores   = var.cores
     sockets = var.sockets
-    type  = "x86-64-v2-AES"
+    type    = "x86-64-v2-AES"
   }
 
   memory {
@@ -28,7 +30,8 @@ resource "proxmox_virtual_environment_vm" "this" {
     size         = var.disk_size
     discard      = "on"
     iothread     = true
-    file_id = var.image_id != null ? var.image_id : null
+    # Solo definir file_id si es una VM nueva
+    file_id      = var.image_id != "" ? var.image_id : null
   }
 
   network_device {
@@ -38,10 +41,11 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
 
   initialization {
+    # Solo inicializa IP si se pasa
     ip_config {
       ipv4 {
-        address = var.ip_address
-        gateway = var.gateway
+        address = var.ip_address != "" ? var.ip_address : null
+        gateway = var.gateway != "" ? var.gateway : null
       }
     }
 
@@ -52,6 +56,6 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
 
   operating_system {
-    type = "l26"  # Linux kernel 2.6+
+    type = "l26"
   }
 }
