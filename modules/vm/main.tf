@@ -49,7 +49,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     }
 
     user_account {
-      username = "debian"
+      username = var.ssh_user
       keys     = var.ssh_public_keys != "" ? [var.ssh_public_keys] : []
     }
   }

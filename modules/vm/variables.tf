@@ -37,6 +37,11 @@ variable "disk_size" {
   default = 20
 }
 
+variable "ssh_user" {
+  type = string
+  description = "User for ssh connection"
+}
+
 variable "disk_interface" {
   type = string
   description = "Disk interface"

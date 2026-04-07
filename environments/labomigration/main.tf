@@ -44,6 +44,7 @@ module "piggybank" {
   gateway          = "172.16.120.1"
   bridge           = "vmbr120"
   tags             = ["terraform", "vm", "app"]
+  ssh_user         = "sysadmin"
   ssh_public_keys  = file("~/.ssh/id_ed25519.pub")
 }
 
@@ -67,6 +68,7 @@ module "beeprovi" {
   gateway          = "172.16.120.1"
   bridge           = "vmbr120"
   tags             = ["terraform", "vm", "app"]
+  ssh_user         = "sysadmin"
   ssh_public_keys  = file("~/.ssh/id_ed25519.pub")
 }
 
