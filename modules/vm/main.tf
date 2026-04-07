@@ -6,10 +6,10 @@ resource "proxmox_virtual_environment_vm" "this" {
   started   = true
 
   description = "Managed by Terraform"
-  boot_order = ["virtio0"]
+  boot_order = ["scsi0"]
   
   agent {
-    enabled = false  # requiere qemu-guest-agent instalado en la VM
+    enabled = true  # requiere qemu-guest-agent instalado en la VM
   }
 
   cpu {
