@@ -26,7 +26,7 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   disk {
     datastore_id = var.datastore_id
-    interface    = "scsi0"
+    interface    = "scsi"
     size         = var.disk_size
     discard      = "on"
     iothread     = true
