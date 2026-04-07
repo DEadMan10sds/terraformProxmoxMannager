@@ -189,7 +189,8 @@ resource "null_resource" "vm_pipeline" {
   }
 
   depends_on = [
-    null_resource.bootstrap
+    null_resource.bootstrap,
+    local_file.ansible_vars
   ]
 }
 
@@ -204,7 +205,8 @@ resource "null_resource" "lxc_pipeline" {
   }
 
   depends_on = [
-    module.reverse_proxy
+    module.reverse_proxy,
+    local_file.ansible_vars
   ]
 }
 
@@ -219,6 +221,7 @@ resource "null_resource" "nginx_pipeline" {
   }
 
   depends_on = [
-    module.reverse_proxy
+    module.reverse_proxy,
+    local_file.ansible_vars
   ]
 }
