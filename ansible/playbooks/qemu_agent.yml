@@ -1,0 +1,43 @@
+- name: Construir inventario dinámico
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - ../vars/secrets.yml
+
+  tasks:
+    - name: Agregar VMs al grupo qemu
+      add_host:
+        name: "{{ item.name }}"
+        ansible_host: "{{ item.ip }}"
+        groups: qemu
+        ansible_user: debian
+      loop: "{{ qemu_hosts }}"
+
+    - name: Agregar LXCs al grupo lxc
+      add_host:
+        name: "{{ item.name }}"
+        ansible_host: "{{ item.ip }}"
+        groups: lxc
+        ansible_user: root
+      loop: "{{ lxc_hosts }}"
+
+# ---- VMs ----
+- name: Configurar QEMU Agent en VMs
+  hosts: qemu
+  become: yes
+  roles:
+    - qemu_agent
+
+# ---- LXC ----
+- name: Configuración base en LXC
+  hosts: lxc
+  become: yes
+
+  tasks:
+    - name: Instalar paquetes base
+      apt:
+        name:
+          - iproute2
+          - net-tools
+        state: present
+        update_cache: yes
