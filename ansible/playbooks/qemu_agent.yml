@@ -11,7 +11,7 @@
         ansible_host: "{{ item.ip }}"
         groups: qemu
         ansible_user: "{{ item.user }}"
-        ansible_ssh_private_key_file: "~/.ssh/id_ed25519"
+        ansible_ssh_private_key_file: "/home/tfuser/.ssh/id_ed25519"
       loop: "{{ qemu_hosts }}"
 
     - name: Agregar LXCs al grupo lxc
@@ -20,7 +20,7 @@
         ansible_host: "{{ item.ip }}"
         groups: lxc
         ansible_user: "{{ item.user }}"
-        ansible_ssh_private_key_file: "~/.ssh/id_ed25519"
+        ansible_ssh_private_key_file: "/home/tfuser/.ssh/id_ed25519"
       loop: "{{ lxc_hosts }}"
 
 # ---- VMs ----
