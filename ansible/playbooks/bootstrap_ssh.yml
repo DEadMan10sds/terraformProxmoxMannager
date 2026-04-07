@@ -5,12 +5,12 @@
     - ../vars/secrets.yml
 
   tasks:
-    - name: Instalar SSH key en cada VM
+    - name: Instalar SSH key
       ansible.builtin.authorized_key:
         user: "{{ item.user }}"
         key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
       loop: "{{ qemuhosts }}"
       delegate_to: "{{ item.ip }}"
       vars:
-        ansible_user: "{{ item.user }}"
-        ansible_password: "{{ item.password }}"
+        ansible_ssh_user: "{{ item.user }}"
+        ansible_ssh_pass: "{{ item.password }}"
