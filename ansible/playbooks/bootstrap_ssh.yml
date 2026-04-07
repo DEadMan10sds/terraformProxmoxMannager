@@ -1,18 +1,25 @@
-- name: Bootstrap SSH keys en VMs
+- name: Construir inventario dinámico
   hosts: localhost
   gather_facts: false
   vars_files:
     - ../vars/secrets.yml
 
   tasks:
-    - name: Instalar SSH key
-      ansible.builtin.authorized_key:
-        user: "{{ host.user }}"
-        key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
+    - name: Agregar hosts
+      add_host:
+        name: "{{ item.name }}"
+        groups: bootstrap
+        ansible_host: "{{ item.ip }}"
+        ansible_user: "{{ item.user }}"
+        ansible_password: "{{ item.password }}"
       loop: "{{ qemuhosts }}"
-      loop_control:
-        loop_var: host
-      delegate_to: "{{ host.ip }}"
-      vars:
-        ansible_user: "{{ host.user }}"
-        ansible_password: "{{ host.password }}"
+
+- name: Instalar SSH key en VMs
+  hosts: bootstrap
+  gather_facts: false
+
+  tasks:
+    - name: Agregar clave pública
+      ansible.posix.authorized_key:
+        user: "{{ ansible_user }}"
+        key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
