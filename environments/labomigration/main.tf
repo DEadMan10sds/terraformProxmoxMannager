@@ -149,7 +149,7 @@ locals {
 ########################################
 
 resource "local_file" "ansible_vars" {
-  filename = "${path.root}~/terraformProxmoxMannager/ansible/vars/generated.yml"
+  filename = "${path.root} ../..ansible/vars/generated.yml"
 
   content = yamlencode({
     vhosts     = var.vhosts
