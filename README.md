@@ -12,6 +12,42 @@ Run:
 
 **Lookup for the user with the access to terraform repo (tfuser)**
 
+### Terraform migration of existing VM's
+
+To migrate an existing vm that was created without terraform, you must define the config file (as any other vm) with the correct VM data.
+
+#### Getting vm data
+
+Inside a cluster node:
+`qm config vm_id`
+
+With that config we can fill the information as in the example:
+`module "vmname" {
+  source = "../../modules/vm"
+  node_name        = "server1"
+  vm_id            = vmID
+  hostname         = "VmHost"
+  cores            = 4
+  sockets          = 2
+  memory           = 4096
+  disk_size        = 128
+  datastore_id     = "VMStorage"
+  disk_interface   = "scsi0"
+  boot_order       = [ "scsi0" ]
+  ip_address       = "172.16.120.12/24"
+  gateway          = "172.16.120.1"
+  bridge           = "vmbr120"
+  tags             = ["terraform", "vm", "app"]
+  ssh_public_keys  = file("~/.ssh/id_ed25519.pub")
+}`
+
+Then you must run the command to adopt the vm:
+`terraform import module.vm_host_name.proxmox_virtual_environment_vm.this proxmox_node/vm_id`
+
+From here you can run to apply the changes:
+1.- `terraform plan`
+2.- `terraform apply`
+
 ## Trigger ansible
 
 Inside ansible folder run:
