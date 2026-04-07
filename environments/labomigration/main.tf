@@ -35,7 +35,6 @@ module "piggybank" {
   hostname         = "PiggyBank"
   cores            = 2
   sockets          = 1
-  boot_order       = [ "scsi0" ]
   memory           = 4096
   disk_size        = 80
   datastore_id     = "local-lvm"

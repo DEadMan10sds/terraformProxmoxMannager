@@ -8,7 +8,7 @@ resource "proxmox_virtual_environment_vm" "this" {
   description = "Managed by Terraform"
 
   # Boot order opcional
-  boot_order = length(var.boot_order) > 0 ? var.boot_order : null
+  boot_order = var.boot_order != [] ? var.boot_order : null
 
   agent {
     enabled = true
