@@ -116,7 +116,7 @@ module "pruebas" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  image_id       = proxmox_download_file.ubuntu2404.file_id
+  image_id       = proxmox_download_file.ubuntu2404.id
 
   ip_address = "172.16.120.13/24"
   gateway    = "172.16.120.1"
