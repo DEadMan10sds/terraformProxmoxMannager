@@ -26,15 +26,11 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   disk {
     datastore_id = var.datastore_id
-    interface    = "sci0"
+    interface    = var.disk_interface
     size         = var.disk_size
-    file_id      = var.image_id
-  }
-
-  disk {
-    datastore_id = var.datastore_id
-    interface    = "ide2"
-    file_id      = "cloudinit"
+    discard      = "on"
+    iothread     = true
+    file_id      = var.image_id != "" ? var.image_id : null
   }
 
   network_device {
@@ -62,12 +58,4 @@ resource "proxmox_virtual_environment_vm" "this" {
   operating_system {
     type = "l26"
   }
-
-  lifecycle {
-    ignore_changes = [
-      disk[0].file_id,
-      initialization
-    ]
-  }
-
 }

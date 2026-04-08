@@ -46,7 +46,7 @@ module "reverse_proxy" {
   memory           = 512
   disk_size        = 8
   datastore_id     = "local-lvm"
-  template_file_id = proxmox_download_file.debian12.id
+  template_file_id = proxmox_download_file.debian12
 
   ip_address = "172.16.120.10/24"
   gateway    = "172.16.120.1"
@@ -75,9 +75,10 @@ module "piggybank" {
   memory         = 4096
   disk_size      = 80
   datastore_id   = "VMStorage"
+  disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  image_id       = proxmox_download_file.ubuntu_cloud.id
-  
+  image_id = proxmox_download_file.ubuntu_cloud.id
+
   ip_address = "172.16.120.11/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
@@ -102,9 +103,9 @@ module "beeprovi" {
   memory         = 4096
   disk_size      = 128
   datastore_id   = "VMStorage"
+  disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  image_id       = proxmox_download_file.ubuntu_cloud.id
-
+  image_id = proxmox_download_file.ubuntu_cloud.id
   ip_address = "172.16.120.12/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
@@ -137,7 +138,7 @@ module "pruebas" {
   boot_order     = ["scsi0"]
 
   # ✅ SOLO AQUÍ usamos imagen
-  image_id       = proxmox_download_file.ubuntu_cloud.id
+  image_id = proxmox_download_file.ubuntu_cloud.id
 
   ip_address = "172.16.120.13/24"
   gateway    = "172.16.120.1"

@@ -93,8 +93,3 @@ variable "tags" {
   type    = list(string)
   default = []
 }
-
-variable "ignore_disk_changes" {
-  type    = bool
-  default = false
-}
