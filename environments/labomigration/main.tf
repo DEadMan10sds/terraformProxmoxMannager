@@ -77,7 +77,8 @@ module "piggybank" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-
+  image_id       = proxmox_download_file.ubuntu_cloud.id
+  
   ip_address = "172.16.120.11/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
@@ -104,6 +105,7 @@ module "beeprovi" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
+  image_id       = proxmox_download_file.ubuntu_cloud.id
 
   ip_address = "172.16.120.12/24"
   gateway    = "172.16.120.1"
