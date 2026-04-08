@@ -66,7 +66,7 @@ module "piggybank" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  template_id = 9000
+  template_id = 9999
   ip_address = "172.16.120.11/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
@@ -96,7 +96,7 @@ module "beeprovi" {
   ip_address = "172.16.120.12/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
-  template_id = 9000
+  template_id = 9999
   ssh_user        = "sysadmin"
   #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
 
@@ -119,7 +119,7 @@ module "pruebas" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  template_id = 9000
+  template_id = 9999
   ip_address = "172.16.120.13/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
