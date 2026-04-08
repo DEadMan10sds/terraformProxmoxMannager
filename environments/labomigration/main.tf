@@ -111,14 +111,13 @@ module "beeprovi" {
 output "reverse_proxy_ip" { value = module.reverse_proxy.ip_address }
 output "piggybank_ip"     { value = module.piggybank.ip_address }
 output "beeprovi_ip"      { value = module.beeprovi.ip_address }
-output "pruebas_ip"       { value = module.pruebas.ip_address }
 
 ########################################
 # LOCALS (ANSIBLE)
 ########################################
 
 locals {
-  vms = [module.piggybank, module.beeprovi, module.pruebas]
+  vms = [module.piggybank, module.beeprovi]
   lxc = [module.reverse_proxy]
 
   qemu_hosts = [
