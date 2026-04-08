@@ -4,11 +4,15 @@ resource "proxmox_virtual_environment_vm" "this" {
   name      = var.hostname
   tags      = var.tags
   started   = true
+
   description = "Managed by Terraform"
 
-  boot_order = var.boot_order != [] ? var.boot_order : null
+  # Boot order opcional
+  boot_order = length(var.boot_order) > 0 ? var.boot_order : null
 
-  agent { enabled = true }
+  agent {
+    enabled = true
+  }
 
   cpu {
     cores   = var.cores
@@ -16,7 +20,9 @@ resource "proxmox_virtual_environment_vm" "this" {
     type    = "x86-64-v2-AES"
   }
 
-  memory { dedicated = var.memory }
+  memory {
+    dedicated = var.memory
+  }
 
   disk {
     datastore_id = var.datastore_id
@@ -43,10 +49,12 @@ resource "proxmox_virtual_environment_vm" "this" {
 
     user_account {
       username = var.ssh_user
-      password = var.password != null ? var.password : null
+      password = var.password
       keys     = var.ssh_public_keys != "" ? [trimspace(var.ssh_public_keys)] : []
     }
   }
 
-  operating_system { type = "l26" }
+  operating_system {
+    type = "l26"
+  }
 }

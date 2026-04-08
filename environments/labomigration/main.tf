@@ -12,7 +12,7 @@ output "proxmox_nodes" {
 # DESCARGA ISO UBUNTU
 ########################################
 
-resource "proxmox_download_file" "ubuntu2024" {
+resource "proxmox_download_file" "ubuntu2404" {
   node_name    = var.proxmox_node
   content_type = "iso"
   datastore_id = "local"
@@ -35,7 +35,7 @@ module "reverse_proxy" {
   memory           = 512
   disk_size        = 8
   datastore_id     = "local-lvm"
-  template_file_id = proxmox_download_file.ubuntu2024.id
+  template_file_id = proxmox_download_file.ubuntu2404.id
 
   ip_address = "172.16.120.10/24"
   gateway    = "172.16.120.1"
@@ -53,22 +53,22 @@ module "reverse_proxy" {
 ########################################
 
 module "piggybank" {
-  source      = "../../modules/vm"
-  node_name   = var.proxmox_node
-  vm_id       = 102
-  hostname    = "PiggyBank"
-  cores       = 2
-  sockets     = 1
-  memory      = 4096
-  disk_size   = 80
-  datastore_id = "VMStorage"
+  source         = "../../modules/vm"
+  node_name      = var.proxmox_node
+  vm_id          = 102
+  hostname       = "PiggyBank"
+  cores          = 2
+  sockets        = 1
+  memory         = 4096
+  disk_size      = 80
+  datastore_id   = "VMStorage"
   disk_interface = "scsi0"
-  boot_order  = ["scsi0"]
-  image_id    = proxmox_download_file.ubuntu2024.id
+  boot_order     = ["scsi0"]
+  image_id       = proxmox_download_file.ubuntu2404.id
 
-  ip_address  = "172.16.120.11/24"
-  gateway     = "172.16.120.1"
-  bridge      = "vmbr120"
+  ip_address      = "172.16.120.11/24"
+  gateway         = "172.16.120.1"
+  bridge          = "vmbr120"
 
   ssh_user        = "sysadmin"
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
@@ -78,22 +78,22 @@ module "piggybank" {
 }
 
 module "beeprovi" {
-  source      = "../../modules/vm"
-  node_name   = var.proxmox_node
-  vm_id       = 101
-  hostname    = "Beeprovi"
-  cores       = 4
-  sockets     = 2
-  memory      = 4096
-  disk_size   = 128
-  datastore_id = "VMStorage"
+  source         = "../../modules/vm"
+  node_name      = var.proxmox_node
+  vm_id          = 101
+  hostname       = "Beeprovi"
+  cores          = 4
+  sockets        = 2
+  memory         = 4096
+  disk_size      = 128
+  datastore_id   = "VMStorage"
   disk_interface = "scsi0"
-  boot_order  = ["scsi0"]
-  image_id    = proxmox_download_file.ubuntu2024.id
+  boot_order     = ["scsi0"]
+  image_id       = proxmox_download_file.ubuntu2404.id
 
-  ip_address  = "172.16.120.12/24"
-  gateway     = "172.16.120.1"
-  bridge      = "vmbr120"
+  ip_address      = "172.16.120.12/24"
+  gateway         = "172.16.120.1"
+  bridge          = "vmbr120"
 
   ssh_user        = "sysadmin"
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
@@ -103,22 +103,22 @@ module "beeprovi" {
 }
 
 module "pruebas" {
-  source      = "../../modules/vm"
-  node_name   = var.proxmox_node
-  vm_id       = 103
-  hostname    = "Pruebas"
-  cores       = 4
-  sockets     = 2
-  memory      = 4096
-  disk_size   = 80
-  datastore_id = "VMStorage"
+  source         = "../../modules/vm"
+  node_name      = var.proxmox_node
+  vm_id          = 103
+  hostname       = "Pruebas"
+  cores          = 4
+  sockets        = 2
+  memory         = 4096
+  disk_size      = 80
+  datastore_id   = "VMStorage"
   disk_interface = "scsi0"
-  boot_order  = ["scsi0"]
-  image_id    = proxmox_download_file.ubuntu2024.id
+  boot_order     = ["scsi0"]
+  image_id       = proxmox_download_file.ubuntu2404.id
 
-  ip_address  = "172.16.120.13/24"
-  gateway     = "172.16.120.1"
-  bridge      = "vmbr120"
+  ip_address      = "172.16.120.13/24"
+  gateway         = "172.16.120.1"
+  bridge          = "vmbr120"
 
   ssh_user        = "sysadmin"
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
