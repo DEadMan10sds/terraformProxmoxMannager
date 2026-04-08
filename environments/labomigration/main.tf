@@ -23,13 +23,13 @@ resource "proxmox_download_file" "ubuntu_cloud" {
   overwrite = false
 }
 
-resource "proxmox_download_file" "debian12_lxc" {
+resource "proxmox_virtual_environment_download_file" "debian12" {
   node_name    = var.proxmox_node
-  content_type = "vztmpl"
+  content_type = "iso"
   datastore_id = "local"
-
-  url       = "http://download.proxmox.com/images/system/debian-12-standard_12.2-1_amd64.tar.zst"
-  file_name = "debian-12-standard.tar.zst"
+  url          = "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+  file_name    = "debian-12-generic-amd64.img"
+  overwrite    = false
 }
 
 ########################################
