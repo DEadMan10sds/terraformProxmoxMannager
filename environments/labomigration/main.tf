@@ -77,7 +77,7 @@ module "piggybank" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  image_id = proxmox_download_file.ubuntu_cloud.id
+  image_id     = proxmox_virtual_environment_download_file.debian12.id
 
   ip_address = "172.16.120.11/24"
   gateway    = "172.16.120.1"
@@ -106,7 +106,7 @@ module "beeprovi" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  image_id = proxmox_download_file.ubuntu_cloud.id
+  image_id     = proxmox_virtual_environment_download_file.debian12.id
   ip_address = "172.16.120.12/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
@@ -135,8 +135,7 @@ module "pruebas" {
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
 
-  # ✅ SOLO AQUÍ usamos imagen
-  image_id = proxmox_download_file.ubuntu_cloud.id
+  image_id     = proxmox_virtual_environment_download_file.debian12.id
 
   ip_address = "172.16.120.13/24"
   gateway    = "172.16.120.1"
