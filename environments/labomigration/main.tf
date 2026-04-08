@@ -16,7 +16,7 @@ resource "proxmox_download_file" "ubuntu2404" {
   node_name    = var.proxmox_node
   content_type = "iso"
   datastore_id = "local"
-  url          = "https://releases.ubuntu.com/24.04/ubuntu-24.04-live-server-amd64.iso"
+  url          = "https://releases.ubuntu.com/24.04/ubuntu-24.04.4-live-server-amd64.iso"
   file_name    = "ubuntu-24.04-live-server-amd64.iso"
   overwrite    = false
 }
