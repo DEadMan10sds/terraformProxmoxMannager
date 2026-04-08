@@ -103,6 +103,32 @@ module "beeprovi" {
 }
 
 
+module "pruebas" {
+  source = "../../modules/vm"
+
+  node_name      = var.proxmox_node
+  vm_id          = 103
+  hostname       = "Pruebas"
+  cores          = 4
+  sockets        = 2
+  memory         = 4096
+  disk_size      = 80
+  datastore_id   = "VMStorage"
+  disk_interface = "scsi0"
+  boot_order     = ["scsi0"]
+  image_id       = proxmox_download_file.debian12.id
+
+  ip_address = "172.16.120.13/24"
+  gateway    = "172.16.120.1"
+  bridge     = "vmbr120"
+
+  ssh_user        = "sysadmin"
+  ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+  password        = var.vm_passwords["Pruebas"]
+
+  tags = ["terraform", "vm", "pruebas"]
+}
+
 
 ########################################
 # OUTPUTS
@@ -111,13 +137,14 @@ module "beeprovi" {
 output "reverse_proxy_ip" { value = module.reverse_proxy.ip_address }
 output "piggybank_ip"     { value = module.piggybank.ip_address }
 output "beeprovi_ip"      { value = module.beeprovi.ip_address }
+output "pruebas_ip"      { value = module.pruebas.ip_address }
 
 ########################################
 # LOCALS (ANSIBLE)
 ########################################
 
 locals {
-  vms = [module.piggybank, module.beeprovi]
+  vms = [module.piggybank, module.beeprovi, module.pruebas]
   lxc = [module.reverse_proxy]
 
   qemu_hosts = [
@@ -166,7 +193,7 @@ resource "null_resource" "bootstrap" {
   }
 
   triggers = { ips = local.qemu_ips_hash }
-  depends_on = [module.piggybank, module.beeprovi]
+  depends_on = [module.piggybank, module.beeprovi, module.pruebas]
 }
 
 # 🔹 QEMU Agent
