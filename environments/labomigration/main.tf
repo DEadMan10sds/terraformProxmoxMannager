@@ -188,22 +188,13 @@ resource "local_file" "ansible_vars" {
 # PIPELINE
 ########################################
 
-resource "null_resource" "bootstrap" {
-  provisioner "local-exec" {
-    command = "ANSIBLE_CONFIG=/home/tfuser/terraformProxmoxMannager/ansible/ansible.cfg ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/bootstrap.yml"
-  }
-
-  triggers   = { ips = local.qemu_ips_hash }
-  depends_on = [module.piggybank, module.beeprovi, module.pruebas]
-}
-
 resource "null_resource" "vm_pipeline" {
   provisioner "local-exec" {
     command = "ANSIBLE_CONFIG=/home/tfuser/terraformProxmoxMannager/ansible/ansible.cfg ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/qemu_agent.yml"
   }
 
   triggers   = { qemu = local.qemu_hash }
-  depends_on = [null_resource.bootstrap, local_file.ansible_vars]
+  depends_on = [ local_file.ansible_vars]
 }
 
 resource "null_resource" "lxc_pipeline" {
