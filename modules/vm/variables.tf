@@ -60,12 +60,6 @@ variable "datastore_id" {
   default = "VMStorage"
 }
 
-variable "image_id" {
-  description = "ID de la imagen cloud-init en Proxmox, ej: local:iso/debian-12-generic-amd64.img"
-  type        = string
-  default     = null
-}
-
 variable "ip_address" {
   type = string
 }
@@ -94,7 +88,7 @@ variable "tags" {
   default = []
 }
 
-variable "create_from_image" {
-  type    = bool
-  default = false
+variable "template_id" {
+  description = "ID del template en Proxmox"
+  type        = number
 }

@@ -12,17 +12,6 @@ output "proxmox_nodes" {
 # CLOUD IMAGE UBUNTU (SOLO PARA VMs NUEVAS)
 ########################################
 
-resource "proxmox_download_file" "ubuntu_cloud" {
-  node_name    = var.proxmox_node
-  content_type = "iso" # así lo maneja proxmox aunque sea .img
-  datastore_id = "local"
-
-  url       = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
-  file_name = "ubuntu-24.04-cloudimg.img"
-
-  overwrite = false
-}
-
 resource "proxmox_download_file" "debian12" {
   node_name    = var.proxmox_node
   content_type = "iso"
@@ -77,8 +66,7 @@ module "piggybank" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  image_id     = proxmox_download_file.ubuntu_cloud.id
-
+  template_id = 9000
   ip_address = "172.16.120.11/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
@@ -88,8 +76,7 @@ module "piggybank" {
 
   tags = ["terraform", "vm", "app"]
 
-  password = var.vm_passwords["PiggyBank"]
-  create_from_image = true
+  password = var.vm_passwords["Beeprovi"]
 
 }
 
@@ -106,18 +93,16 @@ module "beeprovi" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  image_id     = proxmox_download_file.ubuntu_cloud.id
   ip_address = "172.16.120.12/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
-
+  template_id = 9000
   ssh_user        = "sysadmin"
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
 
   tags = ["terraform", "vm", "app"]
   
   password = var.vm_passwords["PiggyBank"]
-  create_from_image = true
 }
 
 module "pruebas" {
@@ -134,9 +119,7 @@ module "pruebas" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-
-  image_id     = proxmox_download_file.ubuntu_cloud.id
-
+  template_id = 9000
   ip_address = "172.16.120.13/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
@@ -146,7 +129,6 @@ module "pruebas" {
   password        = var.vm_passwords["Pruebas"]
 
   tags = ["terraform", "vm", "pruebas"]
-  create_from_image = true
 }
 
 ########################################

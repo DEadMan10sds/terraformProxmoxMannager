@@ -7,11 +7,14 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   description = "Managed by Terraform"
 
-  # Boot order opcional
   boot_order = var.boot_order != [] ? var.boot_order : null
 
   agent {
     enabled = true
+  }
+
+  clone {
+    vm_id = var.template_id
   }
 
   cpu {
@@ -30,7 +33,6 @@ resource "proxmox_virtual_environment_vm" "this" {
     size         = var.disk_size
     discard      = "on"
     iothread     = true
-    file_id = var.image_id != "" && var.create_from_image ? var.image_id : null
   }
 
   network_device {
@@ -42,14 +44,14 @@ resource "proxmox_virtual_environment_vm" "this" {
   initialization {
     ip_config {
       ipv4 {
-        address = var.ip_address != "" ? var.ip_address : null
-        gateway = var.gateway != "" ? var.gateway : null
+        address = var.ip_address
+        gateway = var.gateway
       }
     }
 
     user_account {
       username = var.ssh_user
-      password = var.password != null ? var.password : null
+      password = var.password
       keys     = var.ssh_public_keys != "" ? [trimspace(var.ssh_public_keys)] : []
     }
   }
