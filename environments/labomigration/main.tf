@@ -57,7 +57,7 @@ module "piggybank" {
   source = "../../modules/vm"
 
   node_name      = "server1"
-  vm_id          = 102
+  vm_id          = 101
   hostname       = "PiggyBank"
   cores          = 2
   sockets        = 1
@@ -84,7 +84,7 @@ module "beeprovi" {
   source = "../../modules/vm"
 
   node_name      = "server1"
-  vm_id          = 101
+  vm_id          = 102
   hostname       = "Beeprovi"
   cores          = 4
   sockets        = 2
