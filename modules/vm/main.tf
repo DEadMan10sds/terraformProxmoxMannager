@@ -25,11 +25,6 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
 
   disk {
-    interface = "ide2"
-    type      = "cloudinit"
-  }
-
-  disk {
     datastore_id = var.datastore_id
     interface    = var.disk_interface
     size         = var.disk_size
@@ -45,7 +40,6 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
 
   initialization {
-    # Solo inicializa IP si se pasa
     ip_config {
       ipv4 {
         address = var.ip_address != "" ? var.ip_address : null
@@ -58,6 +52,15 @@ resource "proxmox_virtual_environment_vm" "this" {
       password = var.password != null ? var.password : null
       keys     = var.ssh_public_keys != "" ? [trimspace(var.ssh_public_keys)] : []
     }
+
+    user_data = <<-EOF
+      #cloud-config
+      packages:
+        - qemu-guest-agent
+      runcmd:
+        - systemctl enable qemu-guest-agent
+        - systemctl start qemu-guest-agent
+    EOF
   }
 
   operating_system {
