@@ -8,9 +8,13 @@ output "proxmox_nodes" {
   value = data.proxmox_virtual_environment_nodes.available.names
 }
 
-resource "proxmox_virtual_environment_download_file" "debian12" {
+########################################
+# DESCARGA ISO / IMG
+########################################
+
+resource "proxmox_download_file" "debian12" {
   node_name    = var.proxmox_node
-  content_type = "iso"
+  content_type = "iso" # o "image" si descargas .qcow2
   datastore_id = "local"
   url          = "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
   file_name    = "debian-12-generic-amd64.img"
@@ -18,7 +22,7 @@ resource "proxmox_virtual_environment_download_file" "debian12" {
 }
 
 ########################################
-# MÓDULOS
+# MÓDULOS LXC
 ########################################
 
 module "reverse_proxy" {
@@ -35,9 +39,8 @@ module "reverse_proxy" {
 
   ip_address = "172.16.120.10/24"
   gateway    = "172.16.120.1"
-
-  vlan_tag = 120
-  bridge   = "vmbr0"
+  vlan_tag   = 120
+  bridge     = "vmbr0"
 
   root_password   = var.lxc_root_password
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
@@ -45,10 +48,14 @@ module "reverse_proxy" {
   tags = ["terraform", "nginx", "reverse-proxy"]
 }
 
+########################################
+# MÓDULOS QEMU
+########################################
+
 module "piggybank" {
   source = "../../modules/vm"
 
-  node_name      = "server1"
+  node_name      = var.proxmox_node
   vm_id          = 102
   hostname       = "PiggyBank"
   cores          = 2
@@ -65,17 +72,15 @@ module "piggybank" {
 
   ssh_user        = "sysadmin"
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+  password        = var.vm_passwords["PiggyBank"]
 
   tags = ["terraform", "vm", "app"]
-
-  password = var.vm_passwords["PiggyBank"]
-
 }
 
 module "beeprovi" {
   source = "../../modules/vm"
 
-  node_name      = "server1"
+  node_name      = var.proxmox_node
   vm_id          = 101
   hostname       = "Beeprovi"
   cores          = 4
@@ -92,16 +97,15 @@ module "beeprovi" {
 
   ssh_user        = "sysadmin"
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+  password        = var.vm_passwords["PiggyBank"]
 
   tags = ["terraform", "vm", "app"]
-  
-  password = var.vm_passwords["PiggyBank"]
 }
 
 module "pruebas" {
   source = "../../modules/vm"
 
-  node_name      = "server1"
+  node_name      = var.proxmox_node
   vm_id          = 103
   hostname       = "Pruebas"
   cores          = 4
@@ -111,49 +115,35 @@ module "pruebas" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  image_id       = proxmox_virtual_environment_download_file.debian12.id
-  ip_address     = "172.16.120.13/24"
-  gateway        = "172.16.120.1"
-  bridge         = "vmbr120"
+  image_id       = proxmox_download_file.debian12.id
+
+  ip_address = "172.16.120.13/24"
+  gateway    = "172.16.120.1"
+  bridge     = "vmbr120"
 
   ssh_user        = "sysadmin"
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+  password        = var.vm_passwords["Pruebas"]
 
   tags = ["terraform", "vm", "pruebas"]
-  
-  password = var.vm_passwords["Pruebas"]
 }
-
 
 ########################################
 # OUTPUTS
 ########################################
 
-output "reverse_proxy_ip" {
-  value = module.reverse_proxy.ip_address
-}
-
-output "piggybank_ip" {
-  value = module.piggybank.ip_address
-}
-
-output "beeprovi_ip" {
-  value = module.beeprovi.ip_address
-}
+output "reverse_proxy_ip" { value = module.reverse_proxy.ip_address }
+output "piggybank_ip"     { value = module.piggybank.ip_address }
+output "beeprovi_ip"      { value = module.beeprovi.ip_address }
+output "pruebas_ip"       { value = module.pruebas.ip_address }
 
 ########################################
-# LOCALS (SOURCE OF TRUTH → ANSIBLE)
+# LOCALS (ANSIBLE)
 ########################################
 
 locals {
-  vms = [
-    module.piggybank,
-    module.beeprovi
-  ]
-
-  lxc = [
-    module.reverse_proxy
-  ]
+  vms = [module.piggybank, module.beeprovi, module.pruebas]
+  lxc = [module.reverse_proxy]
 
   qemu_hosts = [
     for vm in local.vms : {
@@ -164,34 +154,25 @@ locals {
   ]
 
   lxc_hosts = [
-    for lxc in local.lxc : {
-      name = lxc.hostname
-      ip   = split("/", lxc.ip_address)[0]
+    for c in local.lxc : {
+      name = c.hostname
+      ip   = split("/", c.ip_address)[0]
       user = "root"
     }
   ]
 
-  ########################################
-  # HASHES (PIPELINE INTELIGENTE)
-  ########################################
-
   vhosts_hash = sha1(jsonencode(var.vhosts))
   qemu_hash   = sha1(jsonencode(local.qemu_hosts))
   lxc_hash    = sha1(jsonencode(local.lxc_hosts))
-
-  # Solo IPs → detectar hosts nuevos
-  qemu_ips_hash = sha1(jsonencode([
-    for vm in local.qemu_hosts : split("/", vm.ip)[0]
-  ]))
+  qemu_ips_hash = sha1(jsonencode([for vm in local.qemu_hosts : vm.ip]))
 }
 
 ########################################
-# GENERAR VARIABLES PARA ANSIBLE
+# ARCHIVOS PARA ANSIBLE
 ########################################
 
 resource "local_file" "ansible_vars" {
   filename = "/home/tfuser/terraformProxmoxMannager/ansible/vars/generated.yml"
-
   content  = templatefile("${path.module}/generated.yml.tpl", {
     vhosts     = var.vhosts
     qemu_hosts = local.qemu_hosts
@@ -203,66 +184,42 @@ resource "local_file" "ansible_vars" {
 # PIPELINE INTELIGENTE
 ########################################
 
-# 🔹 Bootstrap SSH (solo nuevas VMs)
+# 🔹 Bootstrap SSH
 resource "null_resource" "bootstrap" {
   provisioner "local-exec" {
-      command = "ANSIBLE_CONFIG=/home/tfuser/terraformProxmoxMannager/ansible/ansible.cfg ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/bootstrap.yml"
+    command = "ANSIBLE_CONFIG=/home/tfuser/terraformProxmoxMannager/ansible/ansible.cfg ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/bootstrap.yml"
   }
 
-  triggers = {
-    ips = local.qemu_ips_hash
-  }
-
-  depends_on = [
-    module.piggybank,
-    module.beeprovi
-  ]
+  triggers = { ips = local.qemu_ips_hash }
+  depends_on = [module.piggybank, module.beeprovi, module.pruebas]
 }
 
-# 🔹 Configuración VM (qemu agent, etc)
+# 🔹 QEMU Agent
 resource "null_resource" "vm_pipeline" {
   provisioner "local-exec" {
-      command = "ANSIBLE_CONFIG=/home/tfuser/terraformProxmoxMannager/ansible/ansible.cfg ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/qemu_agent.yml"
+    command = "ANSIBLE_CONFIG=/home/tfuser/terraformProxmoxMannager/ansible/ansible.cfg ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/qemu_agent.yml"
   }
 
-  triggers = {
-    qemu = local.qemu_hash
-  }
-
-  depends_on = [
-    null_resource.bootstrap,
-    local_file.ansible_vars
-  ]
+  triggers = { qemu = local.qemu_hash }
+  depends_on = [null_resource.bootstrap, local_file.ansible_vars]
 }
 
-# 🔹 Configuración LXC base
+# 🔹 LXC base
 resource "null_resource" "lxc_pipeline" {
   provisioner "local-exec" {
-      command = "ANSIBLE_CONFIG=/home/tfuser/terraformProxmoxMannager/ansible/ansible.cfg ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/qemu_agent.yml"
+    command = "ANSIBLE_CONFIG=/home/tfuser/terraformProxmoxMannager/ansible/ansible.cfg ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/qemu_agent.yml"
   }
 
-  triggers = {
-    lxc = local.lxc_hash
-  }
-
-  depends_on = [
-    module.reverse_proxy,
-    local_file.ansible_vars
-  ]
+  triggers = { lxc = local.lxc_hash }
+  depends_on = [module.reverse_proxy, local_file.ansible_vars]
 }
 
-# 🔹 Nginx / Reverse Proxy
+# 🔹 Reverse Proxy / Nginx
 resource "null_resource" "nginx_pipeline" {
   provisioner "local-exec" {
     command = "ANSIBLE_CONFIG=/home/tfuser/terraformProxmoxMannager/ansible/ansible.cfg ansible-playbook -i /home/tfuser/terraformProxmoxMannager/ansible/inventory/hosts.yml /home/tfuser/terraformProxmoxMannager/ansible/playbooks/reverse-proxy.yml"
   }
 
-  triggers = {
-    vhosts = local.vhosts_hash
-  }
-
-  depends_on = [
-    module.reverse_proxy,
-    local_file.ansible_vars
-  ]
+  triggers = { vhosts = local.vhosts_hash }
+  depends_on = [module.reverse_proxy, local_file.ansible_vars]
 }
