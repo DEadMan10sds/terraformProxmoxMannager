@@ -8,6 +8,15 @@ output "proxmox_nodes" {
   value = data.proxmox_virtual_environment_nodes.available.names
 }
 
+resource "proxmox_virtual_environment_download_file" "debian12" {
+  node_name    = var.proxmox_node
+  content_type = "iso"
+  datastore_id = "local"
+  url          = "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+  file_name    = "debian-12-generic-amd64.img"
+  overwrite    = false
+}
+
 ########################################
 # MÓDULOS
 ########################################
@@ -88,6 +97,33 @@ module "beeprovi" {
   
   password = var.vm_passwords["PiggyBank"]
 }
+
+module "pruebas" {
+  source = "../../modules/vm"
+
+  node_name      = "server1"
+  vm_id          = 103
+  hostname       = "Pruebas"
+  cores          = 4
+  sockets        = 2
+  memory         = 4096
+  disk_size      = 80
+  datastore_id   = "VMStorage"
+  disk_interface = "scsi0"
+  boot_order     = ["scsi0"]
+  image_id       = proxmox_virtual_environment_download_file.debian12.id
+  ip_address     = "172.16.120.13/24"
+  gateway        = "172.16.120.1"
+  bridge         = "vmbr120"
+
+  ssh_user        = "sysadmin"
+  ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+
+  tags = ["terraform", "vm", "pruebas"]
+  
+  password = var.vm_passwords["Pruebas"]
+}
+
 
 ########################################
 # OUTPUTS
