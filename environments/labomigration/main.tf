@@ -72,7 +72,7 @@ module "piggybank" {
   bridge     = "vmbr120"
 
   ssh_user        = "sysadmin"
-  ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
 
   tags = ["terraform", "vm", "app"]
 
@@ -98,7 +98,7 @@ module "beeprovi" {
   bridge     = "vmbr120"
   template_id = 9000
   ssh_user        = "sysadmin"
-  ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
 
   tags = ["terraform", "vm", "app"]
   
@@ -125,7 +125,7 @@ module "pruebas" {
   bridge     = "vmbr120"
 
   ssh_user        = "sysadmin"
-  ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
   password        = var.vm_passwords["Pruebas"]
 
   tags = ["terraform", "vm", "pruebas"]
