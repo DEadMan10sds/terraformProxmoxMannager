@@ -166,7 +166,7 @@ resource "null_resource" "bootstrap" {
   }
 
   triggers = { ips = local.qemu_ips_hash }
-  depends_on = [module.piggybank, module.beeprovi, module.pruebas]
+  depends_on = [module.piggybank, module.beeprovi]
 }
 
 # 🔹 QEMU Agent
