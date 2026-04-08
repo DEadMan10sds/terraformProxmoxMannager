@@ -4,15 +4,11 @@ resource "proxmox_virtual_environment_vm" "this" {
   name      = var.hostname
   tags      = var.tags
   started   = true
-
   description = "Managed by Terraform"
 
-  # Boot order opcional
   boot_order = var.boot_order != [] ? var.boot_order : null
 
-  agent {
-    enabled = true
-  }
+  agent { enabled = true }
 
   cpu {
     cores   = var.cores
@@ -20,9 +16,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     type    = "x86-64-v2-AES"
   }
 
-  memory {
-    dedicated = var.memory
-  }
+  memory { dedicated = var.memory }
 
   disk {
     datastore_id = var.datastore_id
@@ -30,7 +24,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     size         = var.disk_size
     discard      = "on"
     iothread     = true
-    file_id      = var.image_id != "" ? var.image_id : null
+    file_id      = var.image_id != null ? var.image_id : null
   }
 
   network_device {
@@ -40,7 +34,6 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
 
   initialization {
-    # Solo inicializa IP si se pasa
     ip_config {
       ipv4 {
         address = var.ip_address != "" ? var.ip_address : null
@@ -55,7 +48,5 @@ resource "proxmox_virtual_environment_vm" "this" {
     }
   }
 
-  operating_system {
-    type = "l26"
-  }
+  operating_system { type = "l26" }
 }
