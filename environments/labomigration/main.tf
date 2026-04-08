@@ -46,7 +46,7 @@ module "reverse_proxy" {
   memory           = 512
   disk_size        = 8
   datastore_id     = "local-lvm"
-  template_file_id = proxmox_download_file.debian12
+  template_file_id = proxmox_download_file.debian12.id
 
   ip_address = "172.16.120.10/24"
   gateway    = "172.16.120.1"
