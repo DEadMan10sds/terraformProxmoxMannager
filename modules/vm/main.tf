@@ -1,6 +1,4 @@
 resource "proxmox_virtual_environment_vm" "this" {
-  count = var.ignore_disk_changes ? 0 : 1
-
   node_name = var.node_name
   vm_id     = var.vm_id
   name      = var.hostname
@@ -28,14 +26,15 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   disk {
     datastore_id = var.datastore_id
-    #interface    = var.disk_interface
+    interface    = "sci0"
     size         = var.disk_size
-    discard      = "on"
-    iothread     = true
-    file_id      = var.image_id != "" ? var.image_id : null
+    file_id      = var.image_id
+  }
+
+  disk {
+    datastore_id = var.datastore_id
     interface    = "ide2"
-    file_format  = "raw"
-    type         = "cloudinit"
+    file_id      = "cloudinit"
   }
 
   network_device {

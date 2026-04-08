@@ -75,7 +75,6 @@ module "piggybank" {
   memory         = 4096
   disk_size      = 80
   datastore_id   = "VMStorage"
-  disk_interface = "scsi0"
   boot_order     = ["scsi0"]
   image_id       = proxmox_download_file.ubuntu_cloud.id
   
@@ -103,7 +102,6 @@ module "beeprovi" {
   memory         = 4096
   disk_size      = 128
   datastore_id   = "VMStorage"
-  disk_interface = "scsi0"
   boot_order     = ["scsi0"]
   image_id       = proxmox_download_file.ubuntu_cloud.id
 
@@ -136,7 +134,6 @@ module "pruebas" {
 
   disk_size      = 80
   datastore_id   = "VMStorage"
-  disk_interface = "scsi0"
   boot_order     = ["scsi0"]
 
   # ✅ SOLO AQUÍ usamos imagen
