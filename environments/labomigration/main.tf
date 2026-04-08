@@ -9,15 +9,15 @@ output "proxmox_nodes" {
 }
 
 ########################################
-# DESCARGA ISO / IMG
+# DESCARGA ISO
 ########################################
 
 resource "proxmox_download_file" "debian12" {
   node_name    = var.proxmox_node
-  content_type = "iso" # o "image" si descargas .qcow2
+  content_type = "iso"               # ahora es ISO, no qcow2
   datastore_id = "local"
-  url          = "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
-  file_name    = "debian-12-generic-amd64.img"
+  url          = "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-12.6.0-amd64-netinst.iso"
+  file_name    = "debian-12-netinst.iso"
   overwrite    = false
 }
 
@@ -77,29 +77,32 @@ module "piggybank" {
   tags = ["terraform", "vm", "app"]
 }
 
-module "beeprovi" {
+module "pruebas" {
   source = "../../modules/vm"
 
   node_name      = var.proxmox_node
-  vm_id          = 101
-  hostname       = "Beeprovi"
+  vm_id          = 103
+  hostname       = "Pruebas"
   cores          = 4
   sockets        = 2
   memory         = 4096
-  disk_size      = 128
+  disk_size      = 80
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
-  boot_order     = ["scsi0"]
+  boot_order     = ["scsi0", "ide2"]  # boot desde disco y luego ISO
 
-  ip_address = "172.16.120.12/24"
-  gateway    = "172.16.120.1"
-  bridge     = "vmbr120"
+  image_id       = proxmox_download_file.debian12.id   # ISO descargada
+  ip_address   = "172.16.120.13/24"
+  gateway      = "172.16.120.1"
+  bridge       = "vmbr120"
 
   ssh_user        = "sysadmin"
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
-  password        = var.vm_passwords["PiggyBank"]
+  password        = var.vm_passwords["Pruebas"]
 
-  tags = ["terraform", "vm", "app"]
+  tags = ["terraform", "vm", "pruebas"]
+
+  
 }
 
 
