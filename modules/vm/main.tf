@@ -52,15 +52,6 @@ resource "proxmox_virtual_environment_vm" "this" {
       password = var.password != null ? var.password : null
       keys     = var.ssh_public_keys != "" ? [trimspace(var.ssh_public_keys)] : []
     }
-
-    user_data = <<-EOF
-      #cloud-config
-      packages:
-        - qemu-guest-agent
-      runcmd:
-        - systemctl enable qemu-guest-agent
-        - systemctl start qemu-guest-agent
-    EOF
   }
 
   operating_system {
