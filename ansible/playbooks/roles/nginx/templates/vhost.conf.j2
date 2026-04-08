@@ -1,32 +1,20 @@
-# Bloque HTTP: siempre activo, redirige a HTTPS y permite ACME challenge
 server {
     listen 80;
     server_name {{ item.domain }};
 
-    # Permitir ACME challenge para certbot
+    access_log /var/log/nginx/{{ item.name }}/access.log;
+    error_log  /var/log/nginx/{{ item.name }}/error.log;
+
+    # Certbot necesita esto para el challenge ANTES de tener el cert
     location /.well-known/acme-challenge/ {
         root /var/www/html;
     }
 
-    # Redirige todo lo demás a HTTPS
     location / {
-        return 301 https://$host$request_uri;
-    }
-}
-
-# Bloque HTTPS: Nginx arranca aunque aún no exista certificado
-server {
-    listen 443 ssl http2;
-    server_name {{ item.domain }};
-
-    # Certificados apuntan a la ruta de Let's Encrypt (solo existirá después de certbot)
-    ssl_certificate /etc/letsencrypt/live/{{ item.domain }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ item.domain }}/privkey.pem;
-
-    root /var/www/html;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ =404;
+        proxy_pass http://{{ item.backend }};
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
