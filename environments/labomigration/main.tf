@@ -17,7 +17,7 @@ resource "proxmox_download_file" "ubuntu_cloud" {
   content_type = "iso" # así lo maneja proxmox aunque sea .img
   datastore_id = "local"
 
-  url       = "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+  url       = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
   file_name = "ubuntu-24.04-cloudimg.img"
 
   overwrite = false
@@ -77,7 +77,7 @@ module "piggybank" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  image_id     = proxmox_virtual_environment_download_file.debian12.id
+  image_id     = proxmox_virtual_environment_download_file.ubuntu_cloud.id
 
   ip_address = "172.16.120.11/24"
   gateway    = "172.16.120.1"
@@ -106,7 +106,7 @@ module "beeprovi" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  image_id     = proxmox_virtual_environment_download_file.debian12.id
+  image_id     = proxmox_virtual_environment_download_file.ubuntu_cloud.id
   ip_address = "172.16.120.12/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
@@ -135,7 +135,7 @@ module "pruebas" {
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
 
-  image_id     = proxmox_virtual_environment_download_file.debian12.id
+  image_id     = proxmox_virtual_environment_download_file.ubuntu_cloud.id
 
   ip_address = "172.16.120.13/24"
   gateway    = "172.16.120.1"
