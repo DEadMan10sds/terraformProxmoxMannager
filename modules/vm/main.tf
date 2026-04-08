@@ -25,12 +25,17 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
 
   disk {
+    interface = "ide2"
+    type      = "cloudinit"
+  }
+
+  disk {
     datastore_id = var.datastore_id
     interface    = var.disk_interface
     size         = var.disk_size
     discard      = "on"
     iothread     = true
-    file_id      = var.image_id != "" ? var.image_id : null
+    file_id = var.image_id != "" && var.create_from_image ? var.image_id : null
   }
 
   network_device {

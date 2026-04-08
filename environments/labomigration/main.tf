@@ -23,13 +23,13 @@ resource "proxmox_download_file" "ubuntu_cloud" {
   overwrite = false
 }
 
-resource "proxmox_download_file" "debian12" {
+resource "proxmox_download_file" "debian12_lxc" {
   node_name    = var.proxmox_node
-  content_type = "iso"
+  content_type = "vztmpl"
   datastore_id = "local"
-  url          = "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
-  file_name    = "debian-12-generic-amd64.img"
-  overwrite    = false
+
+  url       = "http://download.proxmox.com/images/system/debian-12-standard_12.2-1_amd64.tar.zst"
+  file_name = "debian-12-standard.tar.zst"
 }
 
 ########################################
@@ -46,7 +46,7 @@ module "reverse_proxy" {
   memory           = 512
   disk_size        = 8
   datastore_id     = "local-lvm"
-  template_file_id = proxmox_download_file.debian12.id
+  template_file_id = proxmox_download_file.debian12_lxc.id
 
   ip_address = "172.16.120.10/24"
   gateway    = "172.16.120.1"
@@ -89,6 +89,7 @@ module "piggybank" {
   tags = ["terraform", "vm", "app"]
 
   password = var.vm_passwords["PiggyBank"]
+  create_from_image = true
 
 }
 
@@ -116,12 +117,8 @@ module "beeprovi" {
   tags = ["terraform", "vm", "app"]
   
   password = var.vm_passwords["PiggyBank"]
+  create_from_image = true
 }
-
-
-########################################
-# VM NUEVA (ÚNICA QUE USA IMAGE_ID)
-########################################
 
 module "pruebas" {
   source         = "../../modules/vm"
@@ -135,6 +132,7 @@ module "pruebas" {
 
   disk_size      = 80
   datastore_id   = "VMStorage"
+  disk_interface = "scsi0"
   boot_order     = ["scsi0"]
 
   # ✅ SOLO AQUÍ usamos imagen
@@ -149,6 +147,7 @@ module "pruebas" {
   password        = var.vm_passwords["Pruebas"]
 
   tags = ["terraform", "vm", "pruebas"]
+  create_from_image = true
 }
 
 ########################################

@@ -93,3 +93,8 @@ variable "tags" {
   type    = list(string)
   default = []
 }
+
+variable "create_from_image" {
+  type    = bool
+  default = false
+}
