@@ -22,7 +22,7 @@
     mode: "0755"
   loop: "{{ vhosts }}"
 
-# 🔹 Backup de configs actuales (para rollback)
+# 🔹 Backup de configs actuales
 - name: Backup de configuración actual de nginx
   copy:
     src: "/etc/nginx/sites-available/"
@@ -30,70 +30,57 @@
     remote_src: yes
   ignore_errors: yes
 
-# 🔥 BLOQUE PRINCIPAL (deploy seguro)
+# ═══════════════════════════════════════
+# FASE 1 — HTTP (para obtener el cert)
+# ═══════════════════════════════════════
 - block:
-    # 🔹 Desplegar configs
-    - name: Desplegar configuración de virtual hosts
+    - name: "[Fase 1] Desplegar vhost HTTP"
       template:
-        src: vhost.conf.j2
+        src: vhost_http.conf.j2
         dest: "/etc/nginx/sites-available/{{ item.name }}.conf"
         mode: "0644"
       loop: "{{ vhosts }}"
 
-    # 🔹 Habilitar vhosts
-    - name: Habilitar virtual hosts
+    - name: "[Fase 1] Habilitar vhosts"
       file:
         src: "/etc/nginx/sites-available/{{ item.name }}.conf"
         dest: "/etc/nginx/sites-enabled/{{ item.name }}.conf"
         state: link
       loop: "{{ vhosts }}"
 
-    # 🔹 Eliminar default
     - name: Eliminar default de nginx
       file:
         path: /etc/nginx/sites-enabled/default
         state: absent
 
-    # 🔹 Asegurar servicio activo
     - name: Asegurar que Nginx está corriendo y habilitado
       service:
         name: nginx
         state: started
         enabled: yes
 
-    # 🔹 Validar nginx (CLAVE)
-    - name: Validar configuración nginx
+    - name: "[Fase 1] Validar nginx"
       command: nginx -t
-      register: nginx_test
       changed_when: false
 
-    # 🔹 Fallar si config inválida
-    - name: Fallar si nginx config es inválida
-      fail:
-        msg: "❌ Configuración de nginx inválida"
-      when: nginx_test.rc != 0
-
-    # 🔹 Reload nginx solo si todo está bien
-    - name: Reload nginx
+    - name: "[Fase 1] Reload nginx"
       service:
         name: nginx
         state: reloaded
 
-    # 🔹 Certbot (solo si no existe cert)
+    # 🔹 Obtener cert solo si no existe
     - name: Obtener certificado SSL
       command: >
-        certbot --nginx
+        certbot certonly --nginx
         -d {{ item.domain }}
         --non-interactive
         --agree-tos
         -m {{ certbot_email }}
-        --redirect
       args:
         creates: "/etc/letsencrypt/live/{{ item.domain }}/fullchain.pem"
       loop: "{{ vhosts }}"
 
   rescue:
-    # 🔥 ROLLBACK automático
     - name: Restaurar configuración anterior
       copy:
         src: "/etc/nginx/backup_sites_available/"
@@ -107,4 +94,48 @@
 
     - name: Fallar ejecución
       fail:
-        msg: "❌ Error en configuración de nginx. Se hizo rollback automático."
+        msg: "❌ Error en Fase 1 (HTTP/certbot). Se hizo rollback automático."
+
+# ═══════════════════════════════════════
+# FASE 2 — HTTPS (cert ya existe)
+# ═══════════════════════════════════════
+- block:
+    - name: "[Fase 2] Desplegar vhost HTTPS completo"
+      template:
+        src: vhost_https.conf.j2
+        dest: "/etc/nginx/sites-available/{{ item.name }}.conf"
+        mode: "0644"
+      loop: "{{ vhosts }}"
+
+    - name: "[Fase 2] Validar nginx con config HTTPS"
+      command: nginx -t
+      changed_when: false
+
+    - name: "[Fase 2] Reload nginx con HTTPS activo"
+      service:
+        name: nginx
+        state: reloaded
+
+    # 🔹 Configurar renovación automática
+    - name: Asegurar que certbot timer está activo
+      systemd:
+        name: certbot.timer
+        enabled: yes
+        state: started
+
+  rescue:
+    - name: Restaurar configuración HTTP (fallback seguro)
+      template:
+        src: vhost_http.conf.j2
+        dest: "/etc/nginx/sites-available/{{ item.name }}.conf"
+        mode: "0644"
+      loop: "{{ vhosts }}"
+
+    - name: Reload nginx con HTTP
+      service:
+        name: nginx
+        state: reloaded
+
+    - name: Fallar ejecución
+      fail:
+        msg: "❌ Error en Fase 2 (HTTPS). Se restauró config HTTP como fallback."

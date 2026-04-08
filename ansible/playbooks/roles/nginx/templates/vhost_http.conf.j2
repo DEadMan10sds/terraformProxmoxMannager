@@ -5,7 +5,6 @@ server {
     access_log /var/log/nginx/{{ item.name }}/access.log;
     error_log  /var/log/nginx/{{ item.name }}/error.log;
 
-    # Certbot necesita esto para el challenge ANTES de tener el cert
     location /.well-known/acme-challenge/ {
         root /var/www/html;
     }
