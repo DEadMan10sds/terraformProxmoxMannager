@@ -1,4 +1,6 @@
 resource "proxmox_virtual_environment_vm" "this" {
+  count = var.ignore_disk_changes ? 0 : 1
+
   node_name = var.node_name
   vm_id     = var.vm_id
   name      = var.hostname
@@ -63,10 +65,10 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
 
   lifecycle {
-    ignore_changes = var.ignore_disk_changes ? [
+    ignore_changes = [
       disk[0].file_id,
       initialization
-    ] : []
+    ]
   }
 
 }
