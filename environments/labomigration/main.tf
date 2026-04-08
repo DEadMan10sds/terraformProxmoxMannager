@@ -9,7 +9,7 @@ output "proxmox_nodes" {
 }
 
 ########################################
-# DESCARGA ISO
+# DESCARGA ISO / IMG
 ########################################
 
 resource "proxmox_download_file" "debian12" {
@@ -76,6 +76,32 @@ module "piggybank" {
 
   tags = ["terraform", "vm", "app"]
 }
+
+module "beeprovi" {
+  source = "../../modules/vm"
+
+  node_name      = var.proxmox_node
+  vm_id          = 101
+  hostname       = "Beeprovi"
+  cores          = 4
+  sockets        = 2
+  memory         = 4096
+  disk_size      = 128
+  datastore_id   = "VMStorage"
+  disk_interface = "scsi0"
+  boot_order     = ["scsi0"]
+
+  ip_address = "172.16.120.12/24"
+  gateway    = "172.16.120.1"
+  bridge     = "vmbr120"
+
+  ssh_user        = "sysadmin"
+  ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+  password        = var.vm_passwords["PiggyBank"]
+
+  tags = ["terraform", "vm", "app"]
+}
+
 
 module "pruebas" {
   source = "../../modules/vm"
