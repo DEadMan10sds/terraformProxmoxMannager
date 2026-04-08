@@ -12,12 +12,12 @@ output "proxmox_nodes" {
 # DESCARGA ISO / IMG
 ########################################
 
-resource "proxmox_download_file" "debian12" {
+resource "proxmox_download_file" "ubuntu2404" {
   node_name    = var.proxmox_node
-  content_type = "iso"               # ahora es ISO, no qcow2
+  content_type = "iso"
   datastore_id = "local"
-  url          = "https://cdimage.debian.org/cdimage/archive/12.13.0/amd64/iso-cd/debian-12.13.0-amd64-netinst.iso"
-  file_name    = "debian-12-netinst.iso"
+  url          = "https://releases.ubuntu.com/24.04/ubuntu-24.04-live-server-amd64.iso"
+  file_name    = "ubuntu-24.04-live-server-amd64.iso"
   overwrite    = false
 }
 
@@ -116,7 +116,7 @@ module "pruebas" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  image_id       = proxmox_download_file.debian12.id
+  image_id       = proxmox_download_file.ubuntu2404.file_name
 
   ip_address = "172.16.120.13/24"
   gateway    = "172.16.120.1"
