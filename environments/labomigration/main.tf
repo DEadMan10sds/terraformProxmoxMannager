@@ -46,14 +46,13 @@ module "reverse_proxy" {
   memory           = 512
   disk_size        = 8
   datastore_id     = "local-lvm"
-
-  # 🔴 IMPORTANTE: TEMPLATE CORRECTO
   template_file_id = proxmox_download_file.debian12.id
 
   ip_address = "172.16.120.10/24"
   gateway    = "172.16.120.1"
-  vlan_tag   = 120
-  bridge     = "vmbr0"
+
+  vlan_tag = 120
+  bridge   = "vmbr0"
 
   root_password   = var.lxc_root_password
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
@@ -66,16 +65,14 @@ module "reverse_proxy" {
 ########################################
 
 module "piggybank" {
-  source         = "../../modules/vm"
-  node_name      = var.proxmox_node
+  source = "../../modules/vm"
+
+  node_name      = "server1"
   vm_id          = 102
   hostname       = "PiggyBank"
-
   cores          = 2
   sockets        = 1
   memory         = 4096
-
-  # 🔴 IMPORTANTE: NO image_id
   disk_size      = 80
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
@@ -87,22 +84,22 @@ module "piggybank" {
 
   ssh_user        = "sysadmin"
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
-  password        = var.vm_passwords["PiggyBank"]
 
   tags = ["terraform", "vm", "app"]
+
+  password = var.vm_passwords["PiggyBank"]
+
 }
 
 module "beeprovi" {
-  source         = "../../modules/vm"
-  node_name      = var.proxmox_node
+  source = "../../modules/vm"
+
+  node_name      = "server1"
   vm_id          = 101
   hostname       = "Beeprovi"
-
   cores          = 4
   sockets        = 2
   memory         = 4096
-
-  # 🔴 IMPORTANTE: NO image_id
   disk_size      = 128
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
@@ -114,10 +111,12 @@ module "beeprovi" {
 
   ssh_user        = "sysadmin"
   ssh_public_keys = file("~/.ssh/id_ed25519.pub")
-  password        = var.vm_passwords["Beeprovi"]
 
   tags = ["terraform", "vm", "app"]
+  
+  password = var.vm_passwords["PiggyBank"]
 }
+
 
 ########################################
 # VM NUEVA (ÚNICA QUE USA IMAGE_ID)

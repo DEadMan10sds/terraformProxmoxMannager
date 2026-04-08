@@ -8,7 +8,7 @@ resource "proxmox_virtual_environment_vm" "this" {
   description = "Managed by Terraform"
 
   # Boot order opcional
-  boot_order = length(var.boot_order) > 0 ? var.boot_order : null
+  boot_order = var.boot_order != [] ? var.boot_order : null
 
   agent {
     enabled = true
@@ -30,7 +30,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     size         = var.disk_size
     discard      = "on"
     iothread     = true
-    file_id      = var.image_id != null ? var.image_id : null
+    file_id      = var.image_id != "" ? var.image_id : null
   }
 
   network_device {
@@ -40,6 +40,7 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
 
   initialization {
+    # Solo inicializa IP si se pasa
     ip_config {
       ipv4 {
         address = var.ip_address != "" ? var.ip_address : null
@@ -49,7 +50,7 @@ resource "proxmox_virtual_environment_vm" "this" {
 
     user_account {
       username = var.ssh_user
-      password = var.password
+      password = var.password != null ? var.password : null
       keys     = var.ssh_public_keys != "" ? [trimspace(var.ssh_public_keys)] : []
     }
   }
