@@ -76,7 +76,7 @@ module "piggybank" {
 
   tags = ["terraform", "vm", "app"]
 
-  password = var.vm_passwords["Beeprovi"]
+  password = var.vm_passwords["PiggyBank"]
 
 }
 
@@ -102,7 +102,7 @@ module "beeprovi" {
 
   tags = ["terraform", "vm", "app"]
   
-  password = var.vm_passwords["PiggyBank"]
+  password = var.vm_passwords["Beeprovi"]
 }
 
 module "pruebas" {
