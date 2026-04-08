@@ -16,7 +16,7 @@ resource "proxmox_download_file" "debian12" {
   node_name    = var.proxmox_node
   content_type = "iso"               # ahora es ISO, no qcow2
   datastore_id = "local"
-  url          = "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-12.6.0-amd64-netinst.iso"
+  url          = "https://cdimage.debian.org/cdimage/archive/12.13.0/amd64/iso-cd/debian-12.13.0-amd64-netinst.iso"
   file_name    = "debian-12-netinst.iso"
   overwrite    = false
 }
