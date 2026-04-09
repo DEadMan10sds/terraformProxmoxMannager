@@ -96,7 +96,7 @@ module "beeprovi" {
   ip_address = "172.16.120.12/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
-  template_id = 9999
+  template_id = 9996
   ssh_user        = "sysadmin"
   #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
 
