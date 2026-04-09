@@ -61,7 +61,7 @@ module "piggybank" {
   hostname       = "PiggyBank"
   cores          = 4
   sockets        = 2
-  memory         = 4096
+  memory         = 4192
   disk_size      = 80
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
