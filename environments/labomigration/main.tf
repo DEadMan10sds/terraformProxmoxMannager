@@ -145,7 +145,7 @@ module "RedoTemplate" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  template_id = 9998
+  template_id = 9999
   ip_address = "172.16.120.14/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
