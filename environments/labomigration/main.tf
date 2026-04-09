@@ -59,8 +59,8 @@ module "piggybank" {
   node_name      = "server1"
   vm_id          = 101
   hostname       = "PiggyBank"
-  cores          = 2
-  sockets        = 1
+  cores          = 4
+  sockets        = 2
   memory         = 4096
   disk_size      = 80
   datastore_id   = "VMStorage"
