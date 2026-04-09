@@ -78,52 +78,48 @@ If a container doesn't allows ssh, we must edit the sshd_config file
 
 ## Create template for VM
 
-wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
-qm create 9000 --name ubuntu-22-template --memory 2048 --cores 2 --net0 virtio,bridge=vmbr0
-qm importdisk 9000 jammy-server-cloudimg-amd64.img local-lvm
-qm set 9000 --scsihw virtio-scsi-pci
-qm set 9000 --scsi0 local-lvm:vm-9000-disk-0
-qm set 9000 --ide2 local-lvm:cloudinit
-qm set 9000 --boot c --bootdisk scsi0
-qm set 9000 --serial0 socket --vga serial0
-qm set 9000 --ciuser ubuntu
-qm set 9000 --cipassword ubuntu
-qm set 9000 --ipconfig0 ip=dhcp
-qm set 9000 --agent enabled=1
+1. `wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img`
+1. `qm create 9000 --name ubuntu-22-template --memory 2048 --cores 2 --net0 virtio,bridge=vmbr0`
+1. `qm importdisk 9000 jammy-server-cloudimg-amd64.img local-lvm`
+1. `qm set 9000 --scsihw virtio-scsi-pci`
+1. `qm set 9000 --scsi0 local-lvm:vm-9000-disk-0`
+1. `qm set 9000 --ide2 local-lvm:cloudinit`
+1. `qm set 9000 --boot c --bootdisk scsi0`
+1. `qm set 9000 --serial0 socket --vga serial0`
+1. `qm set 9000 --ciuser ubuntu`
+1. `qm set 9000 --cipassword ubuntu`
+1. `qm set 9000 --ipconfig0 ip=dhcp`
+1. `qm set 9000 --agent enabled=1`
 
-### Verify disk size to avoid update errors -> Proxmox webui
+1. `Verify disk size to avoid update errors -> Proxmox webui`
 
-qm start 9000
-qm terminal 9000
+1. `qm start 9000`
+1. `qm terminal 9000`
 
-sudo apt update
-sudo apt install -y qemu-guest-agent cloud-init
-sudo systemctl start qemu-guest-agent
-sudo systemctl enable --now qemu-guest-agent
-sudo systemctl disable systemd-networkd-wait-online
-sudo nano /etc/ssh/sshd_config
+1. `sudo apt update`
+1. `sudo apt install -y qemu-guest-agent cloud-init`
+1. `sudo systemctl start qemu-guest-agent`
+1. `sudo systemctl enable --now qemu-guest-agent`
+1. `sudo systemctl disable systemd-networkd-wait-online`
+1. `sudo nano /etc/ssh/sshd_config`
 
----
+1. `PasswordAuthentication yes`
+1. `ChallengeResponseAuthentication no`
+1. `UsePAM yes`
 
-PasswordAuthentication yes
-ChallengeResponseAuthentication no
-UsePAM yes
+1. `ls /etc/ssh/sshd_config.d/`
+1. `sudo nano /etc/ssh/sshd_config.d/\*.conf`
 
----
+PasswordAuthentication no
 
-ls /etc/ssh/sshd_config.d/
-sudo nano /etc/ssh/sshd_config.d/\*.conf
+15. `sudo systemctl restart ssh`
+16. `sudo cloud-init clean --logs`
+17. `sudo rm -rf /var/lib/cloud/\*`
+18. `sudo deluser --remove-home ubuntu`
+19. `sudo shutdown now`
 
----
-
-## PasswordAuthentication no
-
-sudo systemctl restart ssh
-sudo cloud-init clean
-sudo shutdown now
-
-qm set 9000 --delete serial0
-qm set 9000 --delete vga
-qm set 9000 --delete ciuser
-qm set 9000 --delete cipassword
-qm template 9000
+20. `qm set 9000 --delete serial0`
+21. `qm set 9000 --delete vga`
+22. `qm set 9000 --delete ciuser`
+23. `qm set 9000 --delete cipassword`
+24. `qm template 9000`
