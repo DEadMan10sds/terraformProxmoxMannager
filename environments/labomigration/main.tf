@@ -131,32 +131,6 @@ module "pruebas" {
   tags = ["terraform", "vm", "pruebas"]
 }
 
-module "RedoTemplate" {
-  source         = "../../modules/vm"
-  node_name      = var.proxmox_node
-  vm_id          = 105
-  hostname       = "RedoTemplate"
-
-  cores          = 4
-  sockets        = 2
-  memory         = 4096
-
-  disk_size      = 80
-  datastore_id   = "VMStorage"
-  disk_interface = "scsi0"
-  boot_order     = ["scsi0"]
-  template_id = 9999
-  ip_address = "172.16.120.15/24"
-  gateway    = "172.16.120.1"
-  bridge     = "vmbr120"
-
-  ssh_user        = "sysadmin"
-  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
-  password        = var.vm_passwords["Pruebas"]
-
-  tags = ["terraform", "vm", "pruebas"]
-}
-
 module "pruebas2" {
   source         = "../../modules/vm"
   node_name      = var.proxmox_node
