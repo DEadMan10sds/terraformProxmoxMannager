@@ -134,7 +134,7 @@ module "pruebas" {
 module "RedoTemplate" {
   source         = "../../modules/vm"
   node_name      = var.proxmox_node
-  vm_id          = 104
+  vm_id          = 105
   hostname       = "RedoTemplate"
 
   cores          = 4
@@ -146,7 +146,7 @@ module "RedoTemplate" {
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
   template_id = 9999
-  ip_address = "172.16.120.14/24"
+  ip_address = "172.16.120.15/24"
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
 
