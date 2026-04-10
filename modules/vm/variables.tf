@@ -92,3 +92,9 @@ variable "template_id" {
   description = "ID del template en Proxmox"
   type        = number
 }
+
+variable "cpu_type" {
+  description = "Tipo de cpu"
+  type = string
+  default = "x86-64-v3"
+}
