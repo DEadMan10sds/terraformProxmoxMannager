@@ -88,7 +88,7 @@ module "beeprovi" {
   hostname       = "Beeprovi"
   cores          = 4
   sockets        = 2
-  memory         = 4096
+  memory         = 8196
   disk_size      = 128
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
