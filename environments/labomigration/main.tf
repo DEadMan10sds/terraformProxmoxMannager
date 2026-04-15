@@ -164,8 +164,8 @@ module "ProxmoxBackupServerSecundary" {
   vm_id          = 107
   hostname       = "ProxBackupSrvrSec"
   cores          = 4
-  sockets        = 2
-  memory         = 163084
+  sockets        = 1
+  memory         = 16384
   disk_size      = 80
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
