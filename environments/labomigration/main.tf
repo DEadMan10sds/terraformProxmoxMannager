@@ -133,7 +133,7 @@ module "ProxmoxBackupServerSecundary" {
 module "CasaOS" {
   source = "../../modules/vm"
 
-  node_name      = "server2"
+  node_name      = "server1"
   vm_id          = 500
   hostname       = "CasaOS"
   cores          = 4
