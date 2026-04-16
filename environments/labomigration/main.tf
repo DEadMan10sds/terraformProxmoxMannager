@@ -118,8 +118,8 @@ module "ProxmoxBackupServerSecundary" {
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
-  ip_address = "172.16.120.30/24"
-  gateway    = "172.16.120.1"
+  ip_address = "172.16.140.11/24"
+  gateway    = "172.16.140.1"
   bridge     = "vmbr120"
   template_id = 9997
   ssh_user        = "sysadmin"
