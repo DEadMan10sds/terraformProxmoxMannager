@@ -52,7 +52,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     user_account {
       username = var.ssh_user
       password = var.password
-      keys     = var.ssh_public_keys != "" ? [trimspace(var.ssh_public_keys)] : []
+       keys     = [file("~/.ssh/id_ed25519.pub")]
     }
   }
 
