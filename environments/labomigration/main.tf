@@ -105,58 +105,6 @@ module "beeprovi" {
   password = var.vm_passwords["Beeprovi"]
 }
 
-module "pruebas" {
-  source         = "../../modules/vm"
-  node_name      = var.proxmox_node
-  vm_id          = 103
-  hostname       = "Pruebas"
-
-  cores          = 4
-  sockets        = 2
-  memory         = 4096
-
-  disk_size      = 80
-  datastore_id   = "VMStorage"
-  disk_interface = "scsi0"
-  boot_order     = ["scsi0"]
-  template_id = 9999
-  ip_address = "172.16.120.13/24"
-  gateway    = "172.16.120.1"
-  bridge     = "vmbr120"
-
-  ssh_user        = "sysadmin"
-  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
-  password        = var.vm_passwords["Pruebas"]
-
-  tags = ["terraform", "vm", "pruebas"]
-}
-
-module "pruebas2" {
-  source         = "../../modules/vm"
-  node_name      = var.proxmox_node
-  vm_id          = 104
-  hostname       = "Pruebas2"
-
-  cores          = 4
-  sockets        = 2
-  memory         = 4096
-
-  disk_size      = 80
-  datastore_id   = "VMStorage"
-  disk_interface = "scsi0"
-  boot_order     = ["scsi0"]
-  template_id = 9998
-  ip_address = "172.16.120.14/24"
-  gateway    = "172.16.120.1"
-  bridge     = "vmbr120"
-
-  ssh_user        = "sysadmin"
-  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
-  password        = var.vm_passwords["Pruebas"]
-
-  tags = ["terraform", "vm", "pruebas"]
-}
-
 module "ProxmoxBackupServerSecundary" {
   source = "../../modules/vm"
 
@@ -181,6 +129,32 @@ module "ProxmoxBackupServerSecundary" {
   
   password = var.vm_passwords["PBSS"]
 }
+
+module "CasaOS" {
+  source = "../../modules/vm"
+
+  node_name      = "server2"
+  vm_id          = 500
+  hostname       = "CasaOS"
+  cores          = 4
+  sockets        = 1
+  memory         = 8196
+  disk_size      = 256
+  datastore_id   = "VMStorage"
+  disk_interface = "scsi0"
+  boot_order     = ["scsi0"]
+  ip_address = "172.16.120.50/24"
+  gateway    = "172.16.120.1"
+  bridge     = "vmbr120"
+  template_id = 9997
+  ssh_user        = "sysadmin"
+  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+
+  tags = ["terraform", "vm", "app"]
+  
+  password = var.vm_passwords["CasaOS"]
+}
+
 
 ########################################
 # OUTPUTS
