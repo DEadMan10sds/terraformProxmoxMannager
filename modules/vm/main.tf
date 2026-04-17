@@ -60,4 +60,19 @@ resource "proxmox_virtual_environment_vm" "this" {
   operating_system {
     type = "l26"
   }
+  
+  lifecycle {
+    ignore_changes = [
+      clone,
+      initialization,
+      node_name,
+      vga,
+      disk[0].file_format,
+      disk[0].path_in_datastore,
+      cpu[0].flags,
+      cpu[0].units,
+      network_device[0].mac_address,
+    ]
+  }
+
 }
