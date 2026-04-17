@@ -98,3 +98,8 @@ variable "cpu_type" {
   type = string
   default = "x86-64-v3"
 }
+
+variable "template_node" {
+  type    = string
+  default = "server1"
+}
