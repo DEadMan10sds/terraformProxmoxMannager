@@ -110,7 +110,7 @@ module "ProxmoxBackupServerSecundary" {
 
   node_name      = "server1"
   vm_id          = 107
-  hostname       = "ProxBackupSrvrSec"
+  hostname       = "ProxBackupSrvr"
   cores          = 4
   sockets        = 1
   memory         = 16384
@@ -120,7 +120,7 @@ module "ProxmoxBackupServerSecundary" {
   boot_order     = ["scsi0"]
   ip_address = "172.16.140.11/24"
   gateway    = "172.16.140.1"
-  bridge     = "vmbr120"
+  bridge     = "vmbr140"
   template_id = 9997
   ssh_user        = "sysadmin"
   #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
@@ -138,8 +138,8 @@ module "CasaOS" {
   hostname       = "CasaOS"
   cores          = 4
   sockets        = 1
-  memory         = 8196
-  disk_size      = 256
+  memory         = 18384
+  disk_size      = 1024
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
