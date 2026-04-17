@@ -12,7 +12,7 @@ output "proxmox_nodes" {
 # CLOUD IMAGE UBUNTU (SOLO PARA VMs NUEVAS)
 ########################################
 
-resource "proxmox_download_file" "debian12" {
+resource "proxmox_virtual_environment_download_file" "debian12" {
   node_name    = var.proxmox_node
   content_type = "iso"
   datastore_id = "local"
