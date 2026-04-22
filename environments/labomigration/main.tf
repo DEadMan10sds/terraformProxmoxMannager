@@ -102,7 +102,7 @@ module "beeprovi" {
 
   tags = ["terraform", "vm", "app"]
   
-  password = var.vm_passwords["Beeprovi"]
+  password = var.vm_passwords["BeeproviDev"]
 }
 
 
