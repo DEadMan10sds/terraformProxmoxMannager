@@ -105,6 +105,32 @@ module "beeprovi" {
   password = var.vm_passwords["Beeprovi"]
 }
 
+module "beeproviProd" {
+  source = "../../modules/vm"
+
+  node_name      = "server1"
+  vm_id          = 110
+  hostname       = "BeeproviProd"
+  cores          = 4
+  sockets        = 2
+  memory         = 4063
+  disk_size      = 64
+  datastore_id   = "VMStorage"
+  disk_interface = "scsi0"
+  boot_order     = ["scsi0"]
+  ip_address = "172.16.120.10/24"
+  gateway    = "172.16.120.1"
+  bridge     = "vmbr120"
+  template_id = 9999
+  ssh_user        = "sysadmin"
+  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+
+  tags = ["terraform", "vm", "app"]
+  
+  password = var.vm_passwords["Beeprovi"]
+}
+
+
 module "ProxmoxBackupServerSecundary" {
   source = "../../modules/vm"
 
