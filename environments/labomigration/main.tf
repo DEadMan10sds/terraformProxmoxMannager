@@ -105,6 +105,31 @@ module "beeprovi" {
   password = var.vm_passwords["BeeproviDev"]
 }
 
+module "beeproviProd" {
+  source = "../../modules/vm"
+
+  node_name      = "server1"
+  vm_id          = 110
+  hostname       = "Beeprovi"
+  cores          = 4
+  sockets        = 2
+  memory         = 4098
+  disk_size      = 64
+  datastore_id   = "VMStorage"
+  disk_interface = "scsi0"
+  boot_order     = ["scsi0"]
+  ip_address = "172.16.120.110/24"
+  gateway    = "172.16.120.1"
+  bridge     = "vmbr120"
+  template_id = 9999
+  ssh_user        = "sysadmin"
+  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+
+  tags = ["terraform", "vm", "app"]
+  
+  password = var.vm_passwords["Beeprovi"]
+}
+
 
 
 module "ProxmoxBackupServerSecundary" {
@@ -166,13 +191,14 @@ output "reverse_proxy_ip" { value = module.reverse_proxy.ip_address }
 output "piggybank_ip"     { value = module.piggybank.ip_address }
 output "beeprovi_ip"      { value = module.beeprovi.ip_address }
 output "casaos_ip"      { value = module.CasaOS.ip_address }
+output "beeproviprod"      { value = module.beeproviProd.ip_address }
 
 ########################################
 # LOCALS (ANSIBLE)
 ########################################
 
 locals {
-  vms = [module.piggybank, module.beeprovi, module.CasaOS]
+  vms = [module.piggybank, module.beeprovi, module.beeproviProd, module.CasaOS]
   lxc = [module.reverse_proxy]
 
   qemu_hosts = [
