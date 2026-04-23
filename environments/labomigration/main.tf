@@ -53,12 +53,12 @@ module "reverse_proxy" {
 # VMs EXISTENTES (NO TOCAR DISCO)
 ########################################
 
-module "piggybank" {
+module "PiggybankDev" {
   source = "../../modules/vm"
 
   node_name      = "server1"
   vm_id          = 101
-  hostname       = "PiggyBank"
+  hostname       = "PiggybankDev"
   cores          = 4
   sockets        = 2
   memory         = 8192
@@ -76,11 +76,11 @@ module "piggybank" {
 
   tags = ["terraform", "vm", "app"]
 
-  password = var.vm_passwords["PiggyBank"]
+  password = var.vm_passwords["PiggybankDev"]
 
 }
 
-module "beeprovi" {
+module "BeeproviDev" {
   source = "../../modules/vm"
 
   node_name      = "server1"
@@ -105,7 +105,7 @@ module "beeprovi" {
   password = var.vm_passwords["BeeproviDev"]
 }
 
-module "beeproviProd" {
+module "Beeprovi" {
   source = "../../modules/vm"
 
   node_name      = "server1"
@@ -188,17 +188,17 @@ module "CasaOS" {
 ########################################
 
 output "reverse_proxy_ip" { value = module.reverse_proxy.ip_address }
-output "piggybank_ip"     { value = module.piggybank.ip_address }
-output "beeprovi_ip"      { value = module.beeprovi.ip_address }
 output "casaos_ip"      { value = module.CasaOS.ip_address }
-output "beeproviprod"      { value = module.beeproviProd.ip_address }
+output "PiggybankDev_ip"     { value = module.PiggybankDev.ip_address }
+output "Beeprovi_ip"      { value = module.Beeprovi.ip_address }
+output "BeeproviDev"      { value = module.BeeproviDev.ip_address }
 
 ########################################
 # LOCALS (ANSIBLE)
 ########################################
 
 locals {
-  vms = [module.piggybank, module.beeprovi, module.beeproviProd, module.CasaOS]
+  vms = [module.PiggybankDev, module.Beeprovi, module.BeeproviDev, module.CasaOS]
   lxc = [module.reverse_proxy]
 
   qemu_hosts = [
