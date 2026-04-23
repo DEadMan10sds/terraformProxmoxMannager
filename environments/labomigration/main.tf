@@ -166,7 +166,7 @@ module "Bitracker" {
   cores          = 4
   sockets        = 2
   memory         = 8192
-  disk_size      = 32
+  disk_size      = 60
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
