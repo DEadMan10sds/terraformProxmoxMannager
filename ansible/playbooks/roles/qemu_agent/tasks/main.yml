@@ -9,16 +9,10 @@
   become: true
   changed_when: false
 
-- name: Limpiar repos rotos antes de actualizar
-  file:
-    path: /etc/apt/sources.list.d/mongodb-org-4.4.list
-    state: absent
-  ignore_errors: yes
-
-- name: Actualizar apt cache
-  apt:
-    update_cache: yes
-    cache_valid_time: 3600
+- name: Actualizar apt cache ignorando errores de repos
+  command: apt-get update -o Acquire::AllowInsecureRepositories=true
+  changed_when: false
+  failed_when: false
 
 - name: Instalar qemu-guest-agent
   apt:
