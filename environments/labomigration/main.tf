@@ -114,7 +114,7 @@ module "Beeprovi" {
   cores          = 4
   sockets        = 2
   memory         = 4098
-  disk_size      = 64
+  disk_size      = 150
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
