@@ -242,7 +242,6 @@ module "ProxmoxBackupServerSecundary" {
 ########################################
 
 output "reverse_proxy_ip" { value = module.reverse_proxy.ip_address }
-output "casaos_ip"      { value = module.CasaOS.ip_address }
 output "Piggybank_ip"     { value = module.Piggybank.ip_address }
 output "PiggybankDev_ip"     { value = module.PiggybankDev.ip_address }
 output "Beeprovi_ip"      { value = module.Beeprovi.ip_address }
@@ -255,7 +254,7 @@ output "Bitracker_ip"      { value = module.Bitracker }
 ########################################
 
 locals {
-  vms = [module.Piggybank, module.PiggybankDev, module.Beeprovi, module.BeeproviDev,  module.Wiki, module.Bittracker,module.CasaOS]
+  vms = [module.Piggybank, module.PiggybankDev, module.Beeprovi, module.BeeproviDev,  module.Wiki, module.Bitracker]
   lxc = [module.reverse_proxy]
 
   qemu_hosts = [
