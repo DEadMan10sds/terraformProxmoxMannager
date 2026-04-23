@@ -1,3 +1,25 @@
+- name: Esperar a que cloud-init termine
+  command: cloud-init status --wait
+  changed_when: false
+  failed_when: false
+  timeout: 120
+
+- name: Reparar dpkg si quedó interrumpido
+  command: dpkg --configure -a
+  become: true
+  changed_when: false
+
+- name: Limpiar repos rotos antes de actualizar
+  file:
+    path: /etc/apt/sources.list.d/mongodb-org-4.4.list
+    state: absent
+  ignore_errors: yes
+
+- name: Actualizar apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
 - name: Instalar qemu-guest-agent
   apt:
     name: qemu-guest-agent
