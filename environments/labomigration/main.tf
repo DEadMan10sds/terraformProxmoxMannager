@@ -157,12 +157,12 @@ module "Piggybank" {
 
 }
 
-module "Bittracker" {
+module "Bitracker" {
   source = "../../modules/vm"
 
   node_name      = "server2"
   vm_id          = 112
-  hostname       = "Bittracker"
+  hostname       = "Bitracker"
   cores          = 4
   sockets        = 2
   memory         = 8192
@@ -180,7 +180,7 @@ module "Bittracker" {
 
   tags = ["terraform", "vm", "app"]
 
-  password = var.vm_passwords["Bittracker"]
+  password = var.vm_passwords["Bitracker"]
 }
 
 
@@ -248,7 +248,7 @@ output "PiggybankDev_ip"     { value = module.PiggybankDev.ip_address }
 output "Beeprovi_ip"      { value = module.Beeprovi.ip_address }
 output "BeeproviDev_ip"      { value = module.BeeproviDev.ip_address }
 output "Wiki_ip"      { value = module.Wiki.ip_address }
-output "Bittracker_ip"      { value = module.Bittracker }
+output "Bitracker_ip"      { value = module.Bitracker }
 
 ########################################
 # LOCALS (ANSIBLE)
