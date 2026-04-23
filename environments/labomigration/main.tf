@@ -166,7 +166,7 @@ module "Bittracker" {
   cores          = 4
   sockets        = 2
   memory         = 8192
-  disk_size      = 64
+  disk_size      = 32
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
@@ -193,7 +193,7 @@ module "Wiki" {
   cores          = 4
   sockets        = 2
   memory         = 8192
-  disk_size      = 64
+  disk_size      = 32
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
@@ -234,31 +234,6 @@ module "ProxmoxBackupServerSecundary" {
   tags = ["terraform", "vm", "app"]
   
   password = var.vm_passwords["PBSS"]
-}
-
-module "CasaOS" {
-  source = "../../modules/vm"
-
-  node_name      = "server1"
-  vm_id          = 500
-  hostname       = "CasaOS"
-  cores          = 4
-  sockets        = 1
-  memory         = 18384
-  disk_size      = 1024
-  datastore_id   = "VMStorage"
-  disk_interface = "scsi0"
-  boot_order     = ["scsi0"]
-  ip_address = "172.16.120.50/24"
-  gateway    = "172.16.120.1"
-  bridge     = "vmbr120"
-  template_id = 9997
-  ssh_user        = "sysadmin"
-  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
-
-  tags = ["terraform", "vm", "app"]
-  
-  password = var.vm_passwords["CasaOS"]
 }
 
 
