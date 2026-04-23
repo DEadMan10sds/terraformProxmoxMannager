@@ -130,7 +130,86 @@ module "Beeprovi" {
   password = var.vm_passwords["Beeprovi"]
 }
 
+module "Piggybank" {
+  source = "../../modules/vm"
 
+  node_name      = "server2"
+  vm_id          = 111
+  hostname       = "Piggybank"
+  cores          = 4
+  sockets        = 2
+  memory         = 8192
+  disk_size      = 64
+  datastore_id   = "VMStorage"
+  disk_interface = "scsi0"
+  boot_order     = ["scsi0"]
+  template_id = 9999
+  ip_address = "172.16.120.111/24"
+  gateway    = "172.16.120.1"
+  bridge     = "vmbr120"
+
+  ssh_user        = "sysadmin"
+  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+
+  tags = ["terraform", "vm", "app"]
+
+  password = var.vm_passwords["Piggybank"]
+
+}
+
+module "Bittracker" {
+  source = "../../modules/vm"
+
+  node_name      = "server2"
+  vm_id          = 112
+  hostname       = "Bittracker"
+  cores          = 4
+  sockets        = 2
+  memory         = 8192
+  disk_size      = 64
+  datastore_id   = "VMStorage"
+  disk_interface = "scsi0"
+  boot_order     = ["scsi0"]
+  template_id = 9999
+  ip_address = "172.16.120.112/24"
+  gateway    = "172.16.120.1"
+  bridge     = "vmbr120"
+
+  ssh_user        = "sysadmin"
+  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+
+  tags = ["terraform", "vm", "app"]
+
+  password = var.vm_passwords["Bittracker"]
+}
+
+
+module "Wiki" {
+  source = "../../modules/vm"
+
+  node_name      = "server2"
+  vm_id          = 113
+  hostname       = "Wiki"
+  cores          = 4
+  sockets        = 2
+  memory         = 8192
+  disk_size      = 64
+  datastore_id   = "VMStorage"
+  disk_interface = "scsi0"
+  boot_order     = ["scsi0"]
+  template_id = 9999
+  ip_address = "172.16.120.113/24"
+  gateway    = "172.16.120.1"
+  bridge     = "vmbr120"
+
+  ssh_user        = "sysadmin"
+  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+
+  tags = ["terraform", "vm", "app"]
+
+  password = var.vm_passwords["Wiki"]
+
+}
 
 module "ProxmoxBackupServerSecundary" {
   source = "../../modules/vm"
@@ -189,16 +268,19 @@ module "CasaOS" {
 
 output "reverse_proxy_ip" { value = module.reverse_proxy.ip_address }
 output "casaos_ip"      { value = module.CasaOS.ip_address }
+output "Piggybank_ip"     { value = module.Piggybank.ip_address }
 output "PiggybankDev_ip"     { value = module.PiggybankDev.ip_address }
 output "Beeprovi_ip"      { value = module.Beeprovi.ip_address }
-output "BeeproviDev"      { value = module.BeeproviDev.ip_address }
+output "BeeproviDev_ip"      { value = module.BeeproviDev.ip_address }
+output "Wiki_ip"      { value = module.Wiki.ip_address }
+output "Bittracker_ip"      { value = module.Bittracker }
 
 ########################################
 # LOCALS (ANSIBLE)
 ########################################
 
 locals {
-  vms = [module.PiggybankDev, module.Beeprovi, module.BeeproviDev, module.CasaOS]
+  vms = [module.Piggybank, module.PiggybankDev, module.Beeprovi, module.BeeproviDev,  module.Wiki, module.Bittracker,module.CasaOS]
   lxc = [module.reverse_proxy]
 
   qemu_hosts = [
