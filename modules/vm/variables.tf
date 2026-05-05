@@ -96,7 +96,7 @@ variable "template_id" {
 variable "cpu_type" {
   description = "Tipo de cpu"
   type = string
-  default = "x86-64-v3"
+  default = "x86-64-v2-AES"
 }
 
 variable "template_node" {
