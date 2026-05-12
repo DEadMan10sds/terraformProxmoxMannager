@@ -31,6 +31,10 @@ server {
         root /var/www/html;
     }
 
+{% if item.client_max_body_size is defined %}
+    client_max_body_size {{ item.client_max_body_size }};
+{% endif %}
+
     location / {
         proxy_pass http://{{ item.backend }};
         proxy_set_header Host              $host;

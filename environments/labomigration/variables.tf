@@ -27,6 +27,7 @@ variable "vhosts" {
     name    = string
     domain  = string
     backend = string
+    client_max_body_size = optional(string, null)
   }))
 }
 

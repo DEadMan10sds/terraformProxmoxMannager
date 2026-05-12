@@ -5,6 +5,10 @@ server {
     access_log /var/log/nginx/{{ item.name }}/access.log;
     error_log  /var/log/nginx/{{ item.name }}/error.log;
 
+{% if item.client_max_body_size is defined %}
+    client_max_body_size {{ item.client_max_body_size }};
+{% endif %}
+
     location /.well-known/acme-challenge/ {
         root /var/www/html;
     }
