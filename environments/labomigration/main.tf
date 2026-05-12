@@ -249,6 +249,7 @@ module "ProxmoxBackupServerSecundary" {
   node_name      = "server1"
   vm_id          = 107
   hostname       = "ProxBackupSrvr"
+  cpu_type = "x86-64-v3"
   cores          = 4
   sockets        = 1
   memory         = 16384
