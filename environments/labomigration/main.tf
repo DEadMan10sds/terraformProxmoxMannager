@@ -57,12 +57,13 @@ module "PiggybankDev" {
   source = "../../modules/vm"
 
   node_name      = "server1"
+  cpu_type = "x86-64-v3"
   vm_id          = 101
   hostname       = "PiggybankDev"
   cores          = 4
   sockets        = 2
   memory         = 8192
-  disk_size      = 80
+  disk_size      = 880
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
@@ -85,11 +86,12 @@ module "BeeproviTest" {
 
   node_name      = "server1"
   vm_id          = 103
+  cpu_type = "x86-64-v3"
   hostname       = "BeeproviTest"
   cores          = 4
   sockets        = 2
-  memory         = 8196
-  disk_size      = 128
+  memory         = 4096
+  disk_size      = 150
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
   boot_order     = ["scsi0"]
@@ -111,6 +113,7 @@ module "BeeproviDev" {
   node_name      = "server1"
   vm_id          = 102
   hostname       = "BeeproviDev"
+  cpu_type = "host"
   cores          = 4
   sockets        = 2
   memory         = 8196
@@ -136,6 +139,7 @@ module "Beeprovi" {
   node_name      = "server1"
   vm_id          = 110
   hostname       = "Beeprovi"
+  cpu_type = "x86-64-v3"
   cores          = 4
   sockets        = 2
   memory         = 4098
