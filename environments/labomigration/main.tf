@@ -234,7 +234,7 @@ module "Wiki" {
   gateway    = "172.16.120.1"
   bridge     = "vmbr120"
 
-  ssh_user        = "sysadmin"
+  ssh_user        = "sistemas"
   #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
 
   tags = ["terraform", "vm", "app"]
