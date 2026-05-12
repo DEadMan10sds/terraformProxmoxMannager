@@ -80,6 +80,31 @@ module "PiggybankDev" {
 
 }
 
+module "BeeproviTest" {
+  source = "../../modules/vm"
+
+  node_name      = "server1"
+  vm_id          = 103
+  hostname       = "BeeproviTest"
+  cores          = 4
+  sockets        = 2
+  memory         = 8196
+  disk_size      = 128
+  datastore_id   = "VMStorage"
+  disk_interface = "scsi0"
+  boot_order     = ["scsi0"]
+  ip_address = "172.16.120.13/24"
+  gateway    = "172.16.120.1"
+  bridge     = "vmbr120"
+  template_id = 9999
+  ssh_user        = "sysadmin"
+  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+
+  tags = ["terraform", "vm", "app"]
+  
+  password = var.vm_passwords["Beeprovi"]
+}
+
 module "BeeproviDev" {
   source = "../../modules/vm"
 
@@ -246,6 +271,7 @@ output "Piggybank_ip"     { value = module.Piggybank.ip_address }
 output "PiggybankDev_ip"     { value = module.PiggybankDev.ip_address }
 output "Beeprovi_ip"      { value = module.Beeprovi.ip_address }
 output "BeeproviDev_ip"      { value = module.BeeproviDev.ip_address }
+output "BeeproviTest_ip"      { value = module.BeeproviTest.ip_address }
 output "Wiki_ip"      { value = module.Wiki.ip_address }
 output "Bitracker_ip"      { value = module.Bitracker }
 
@@ -254,7 +280,7 @@ output "Bitracker_ip"      { value = module.Bitracker }
 ########################################
 
 locals {
-  vms = [module.Piggybank, module.PiggybankDev, module.Beeprovi, module.BeeproviDev,  module.Wiki, module.Bitracker]
+  vms = [module.Piggybank, module.PiggybankDev, module.Beeprovi, module.BeeproviDev,  module.Wiki, module.Bitracker, module.BeeproviTest]
   lxc = [module.reverse_proxy]
 
   qemu_hosts = [
