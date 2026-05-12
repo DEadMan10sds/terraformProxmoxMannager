@@ -8,8 +8,8 @@ resource "proxmox_virtual_environment_vm" "this" {
   description = "Managed by Terraform"
 
   boot_order = var.boot_order != [] ? var.boot_order : null
-  keyboard_layout = "es-mx"
-  
+  keyboard_layout = "es"
+
   agent {
     enabled = true
   }
