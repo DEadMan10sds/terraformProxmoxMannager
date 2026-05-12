@@ -165,6 +165,7 @@ module "Piggybank" {
   node_name      = "server2"
   vm_id          = 111
   hostname       = "Piggybank"
+  cpu_type = "x86-64-v3"
   cores          = 4
   sockets        = 2
   memory         = 8192
@@ -192,6 +193,7 @@ module "Bitracker" {
   node_name      = "server2"
   vm_id          = 112
   hostname       = "Bitracker"
+  cpu_type = "x86-64-v3"
   cores          = 4
   sockets        = 2
   memory         = 8192
@@ -219,6 +221,7 @@ module "Wiki" {
   node_name      = "server2"
   vm_id          = 113
   hostname       = "Wiki"
+  cpu_type = "x86-64-v3"
   cores          = 4
   sockets        = 2
   memory         = 8192
