@@ -53,33 +53,33 @@ module "reverse_proxy" {
 # VMs EXISTENTES (NO TOCAR DISCO)
 ########################################
 
-module "PiggybankDev" {
-  source = "../../modules/vm"
+# module "PiggybankDev" {
+#   source = "../../modules/vm"
 
-  node_name      = "server1"
-  cpu_type = "x86-64-v3"
-  vm_id          = 101
-  hostname       = "PiggybankDev"
-  cores          = 4
-  sockets        = 2
-  memory         = 8192
-  disk_size      = 880
-  datastore_id   = "VMStorage"
-  disk_interface = "scsi0"
-  boot_order     = ["scsi0"]
-  template_id = 9999
-  ip_address = "172.16.120.11/24"
-  gateway    = "172.16.120.1"
-  bridge     = "vmbr120"
+#   node_name      = "server1"
+#   cpu_type = "x86-64-v3"
+#   vm_id          = 101
+#   hostname       = "PiggybankDev"
+#   cores          = 4
+#   sockets        = 2
+#   memory         = 8192
+#   disk_size      = 880
+#   datastore_id   = "VMStorage"
+#   disk_interface = "scsi0"
+#   boot_order     = ["scsi0"]
+#   template_id = 9999
+#   ip_address = "172.16.120.11/24"
+#   gateway    = "172.16.120.1"
+#   bridge     = "vmbr120"
 
-  ssh_user        = "sysadmin"
-  #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
+#   ssh_user        = "sysadmin"
+#   #ssh_public_keys = file("~/.ssh/id_ed25519.pub")
 
-  tags = ["terraform", "vm", "app"]
+#   tags = ["terraform", "vm", "app"]
 
-  password = var.vm_passwords["PiggybankDev"]
+#   password = var.vm_passwords["PiggybankDev"]
 
-}
+# }
 
 module "BeeproviTest" {
   source = "../../modules/vm"
@@ -142,7 +142,7 @@ module "Beeprovi" {
   cpu_type = "x86-64-v3"
   cores          = 4
   sockets        = 2
-  memory         = 4098
+  memory         = 8196
   disk_size      = 150
   datastore_id   = "VMStorage"
   disk_interface = "scsi0"
@@ -276,7 +276,7 @@ module "ProxmoxBackupServerSecundary" {
 
 output "reverse_proxy_ip" { value = module.reverse_proxy.ip_address }
 output "Piggybank_ip"     { value = module.Piggybank.ip_address }
-output "PiggybankDev_ip"     { value = module.PiggybankDev.ip_address }
+#output "PiggybankDev_ip"     { value = module.PiggybankDev.ip_address }
 output "Beeprovi_ip"      { value = module.Beeprovi.ip_address }
 output "BeeproviDev_ip"      { value = module.BeeproviDev.ip_address }
 output "BeeproviTest_ip"      { value = module.BeeproviTest.ip_address }
@@ -288,7 +288,7 @@ output "Bitracker_ip"      { value = module.Bitracker }
 ########################################
 
 locals {
-  vms = [module.Piggybank, module.PiggybankDev, module.Beeprovi, module.BeeproviDev,  module.Wiki, module.Bitracker, module.BeeproviTest]
+  vms = [module.Piggybank, module.Beeprovi, module.BeeproviDev,  module.Wiki, module.Bitracker, module.BeeproviTest]
   lxc = [module.reverse_proxy]
 
   qemu_hosts = [

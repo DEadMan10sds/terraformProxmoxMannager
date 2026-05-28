@@ -17,7 +17,7 @@ provider "proxmox" {
 # ─── Control Plane ───────────────────────────────────────────────────────────
 
 module "k8s_cp" {
-  source      = "../../../modules/vm"
+  source      = "../../modules/vm"
   vmid        = 200
   name        = "k8s-cp-01"
   target_node = "server1"
